@@ -1,0 +1,22 @@
+server:
+  port: "8081"
+  debug: true
+
+database:
+  dsn: "root:123456@tcp(127.0.0.1:3306)/k8s-devops?charset=utf8mb4&parseTime=True&loc=Local"
+
+redis:
+  host: 127.0.0.1
+  port: 6379
+  password: "123456"
+  db: 0
+
+jwt:
+  secret: "n02y2Zqf4eL0hZ4xjQH9w1zDk1w5FqMnc9R+N8T1v2E="
+  expire-time: 3600 # 单位为秒
+  refresh-expire-time: 604800
+  exclude-paths:
+    - /api/v1/sysUser/login
+    - /api/v1/sysUser/refresh
+
+
