@@ -2,7 +2,7 @@ package controller
 
 import (
 	"k8s-platform-go/internal/common"
-	"k8s-platform-go/internal/module/dto"
+	"k8s-platform-go/internal/dal/dto"
 	"k8s-platform-go/internal/service"
 	"k8s-platform-go/internal/util"
 	"log"
@@ -20,12 +20,20 @@ func NewUserController(userService *service.UserService) *UserController {
 	}
 }
 
-//获取用户信息
-
 func (userController *UserController) GetUserDOById(c *gin.Context) {
-	common.Success(c, userController.userService.GetUserById())
+	user, err := userController.userService.GetUserById()
+	if err != nil {
+		common.Fail(c, err)
+	}
+	common.Success(c, user)
 }
 
+// @Tags 用户管理
+// @Summary 用户登录
+// @Param loginRequest body dto.LoginRequest true "登录请求参数"
+// @Success 200 {object}  common.Response{data=dto.CaptchaResponse}
+// @Router /sysUser/login [post]
+// @security Bearer
 func (userController *UserController) Login(c *gin.Context) {
 	var loginRequest dto.LoginRequest
 	if ok := util.BindAndValidate(c, &loginRequest); !ok {
@@ -44,7 +52,6 @@ func (userController *UserController) RefreshToken(c *gin.Context) {
 	userController.userService.RefreshToken(c, refreshRequest)
 }
 
-// GetUserPage 分页获取用户列表
 func (userController *UserController) GetUserPage(c *gin.Context) {
 	var userPageRequest dto.UserPageRequest
 	if ok := util.BindAndValidate(c, &userPageRequest); !ok {
@@ -54,7 +61,6 @@ func (userController *UserController) GetUserPage(c *gin.Context) {
 	userController.userService.GetUserPage(userPageRequest, c)
 }
 
-// UpdateUserStatus 修改用户状态
 func (userController *UserController) UpdateUserStatus(context *gin.Context) {
 	var status string
 	// 获取路径参数
@@ -70,4 +76,17 @@ func (userController *UserController) UpdateUserStatus(context *gin.Context) {
 		return
 	}
 	userController.userService.UpdateUserStatus(context, status)
+}
+
+func (userController *UserController) UpdateUser(context *gin.Context) {
+	//var updateUserRequest dto.UserSaveRequest
+}
+
+func (userController *UserController) GetCaptcha(c *gin.Context) {
+	captcha, err := userController.userService.GetCaptcha()
+	if err != nil {
+		common.Fail(c, err)
+		return
+	}
+	common.Success(c, captcha)
 }

@@ -17,6 +17,6 @@ func GetUserInfoFromContext(c *gin.Context) *Claims {
 }
 
 // GetUserIdFromContext 从上下文中获取用户ID
-func GetUserIdFromContext(c *gin.Context) uint {
+func GetUserIdFromContext(c *gin.Context) int64 {
 	return GetUserInfoFromContext(c).GetUserId()
 }

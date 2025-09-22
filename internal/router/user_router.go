@@ -15,5 +15,7 @@ func InitUserRouter(rg *gin.RouterGroup) {
 		userGroup.POST("/refresh", userController.RefreshToken)
 		userGroup.POST("/page", userController.GetUserPage)
 		userGroup.PUT("/status/", userController.UpdateUserStatus)
+		userGroup.PUT("/", userController.UpdateUser)
+		userGroup.GET("/captcha", userController.GetCaptcha)
 	}
 }

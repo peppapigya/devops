@@ -9,6 +9,7 @@ package wireinfo
 import (
 	"k8s-platform-go/internal/config/db"
 	"k8s-platform-go/internal/controller"
+	"k8s-platform-go/internal/dal/redis"
 	"k8s-platform-go/internal/mapper"
 	"k8s-platform-go/internal/service"
 )
@@ -18,7 +19,9 @@ import (
 func InitializeUserController() *controller.UserController {
 	gormDB := db.NewDB()
 	userMapper := mapper.NewUserMapper(gormDB)
-	userService := service.NewUserService(userMapper)
+	redisC := db.InitRedis()
+	redisClient := redis.NewClient(redisC)
+	userService := service.NewUserService(userMapper, redisClient)
 	userController := controller.NewUserController(userService)
 	return userController
 }

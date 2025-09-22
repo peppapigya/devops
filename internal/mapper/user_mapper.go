@@ -1,59 +1,58 @@
 package mapper
 
 import (
-	"k8s-platform-go/internal/module"
-	"k8s-platform-go/internal/module/dto"
+	"context"
+	"k8s-platform-go/internal/dal/dto"
+	"k8s-platform-go/internal/dal/model"
+	"k8s-platform-go/internal/dal/query"
+	"k8s-platform-go/internal/util"
 
 	"gorm.io/gorm"
 )
 
 type UserMapper struct {
-	DB *gorm.DB
+	DB    *gorm.DB
+	query *query.Query
 }
 
 func NewUserMapper(DB *gorm.DB) *UserMapper {
-	return &UserMapper{DB: DB}
+	return &UserMapper{
+		DB:    DB,
+		query: query.Use(DB),
+	}
 }
 
 // SelectUserById 通过用户id获取用户信息
-func (userMapper *UserMapper) SelectUserById(id int64) *module.UserDO {
-	var userDO module.UserDO
-	userMapper.DB.Where("id = ?", id).First(&userDO)
-	return &userDO
+func (userMapper *UserMapper) SelectUserById(id int64) (*model.SystemUser, error) {
+	user := userMapper.query.SystemUser
+	return query.SystemUser.WithContext(context.Background()).
+		Where(user.ID.Eq(id)).First()
 }
 
-func (userMapper *UserMapper) SelectUserByName(username string) *module.UserDO {
-	var userDO module.UserDO
-	userMapper.DB.Select("id", "username", "password").Where("username = ?", username).Take(&userDO)
-	return &userDO
+// SelectUserByName 通过用户名获取用户信息
+func (userMapper *UserMapper) SelectUserByName(username string) (*model.SystemUser, error) {
+	user := userMapper.query.SystemUser
+	return userMapper.query.SystemUser.WithContext(context.Background()).
+		Select(user.ID, user.Username, user.Password).
+		Where(user.Username.Eq(username)).First()
 }
 
 // SelectPageByCondition 分页查询用户信息
-func (userMapper *UserMapper) SelectPageByCondition(request dto.UserPageRequest) ([]module.UserDO, int64, error) {
+func (userMapper *UserMapper) SelectPageByCondition(request dto.UserPageRequest) (util.PageInfoResponse[model.SystemUser], error) {
 
-	var (
-		userDO []module.UserDO
-		total  int64
+	user := userMapper.query.SystemUser
+	return util.FindPageResult[model.SystemUser](userMapper.query.SystemUser.DO, request.PageNum, request.PageSize,
+		util.WhereIf(request.Username != "", user.Username.Like("%"+request.Username+"%")),
 	)
-	query := userMapper.DB.Model(&userDO)
-	if request.Username != "" {
-		query.Where("username like ?", "%"+request.Username+"%")
-	}
-	if err := query.Count(&total).Error; err != nil {
-		return nil, 0, err
-	}
-	offset := (request.PageNum - 1) * request.PageSize
-	if ok := query.Offset(offset).Find(&userDO).Error; ok != nil {
-		return nil, 0, ok
-	}
-	return userDO, total, nil
 }
 
 // UpdateStatusByUserId 更新用户状态
-func (userMapper *UserMapper) UpdateStatusByUserId(id uint, status string) {
-	userMapper.getQuery().Where("id = ?", id).Update("status", status)
+func (userMapper *UserMapper) UpdateStatusByUserId(id int64, status string) error {
+	user := userMapper.query.SystemUser
+	_, err := userMapper.GetBaseMapper().Where(user.ID.Eq(id)).Update(user.Status, status)
+	return err
 }
 
-func (userMapper *UserMapper) getQuery() *gorm.DB {
-	return userMapper.DB.Model(&module.UserDO{})
+func (userMapper *UserMapper) GetBaseMapper() query.ISystemUserDo {
+	return userMapper.query.SystemUser.WithContext(context.Background())
 }

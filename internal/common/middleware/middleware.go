@@ -7,6 +7,7 @@ import (
 	"k8s-platform-go/internal/util"
 	"log"
 	"net/http"
+	"regexp"
 	"strings"
 	"time"
 
@@ -51,15 +52,19 @@ func RequestLogHandler() gin.HandlerFunc {
 }
 
 func Authenticate(excludePaths ...string) gin.HandlerFunc {
-	excludePathMap := make(map[string]bool)
+	excludePathRegex := make([]*regexp.Regexp, 0)
 	for _, path := range excludePaths {
-		excludePathMap[path] = true
+		str := strings.ReplaceAll(path, "*", "*")
+		excludePathRegex = append(excludePathRegex, regexp.MustCompile(str))
 	}
 	return func(c *gin.Context) {
+		path := c.Request.URL.Path
 		// 如果当前请求路径在排除列表中，则不进行权限验证
-		if excludePathMap[c.Request.URL.Path] {
-			c.Next()
-			return
+		for _, regexPath := range excludePathRegex {
+			if regexPath.MatchString(path) {
+				c.Next()
+				return
+			}
 		}
 		token := c.GetHeader(common.TokenKey)
 		token, found := strings.CutPrefix(token, "Bearer ")

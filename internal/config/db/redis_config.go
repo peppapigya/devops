@@ -9,7 +9,7 @@ import (
 
 var redisClient *redis.Client
 
-func InitRedis() {
+func InitRedis() *redis.Client {
 	redisProperties := config.GetGlobalConfig().Redis
 	client := redis.NewClient(&redis.Options{
 		Addr:     fmt.Sprintf("%s:%s", redisProperties.Host, redisProperties.Port),
@@ -18,6 +18,7 @@ func InitRedis() {
 		DB:       redisProperties.DB,       // use default DB
 	})
 	redisClient = client
+	return redisClient
 }
 
 func CloseRedis() {

@@ -18,5 +18,7 @@ jwt:
   exclude-paths:
     - /api/v1/sysUser/login
     - /api/v1/sysUser/refresh
+    - /api/v1/sysUser/captcha
+    - /swagger/*
 
 

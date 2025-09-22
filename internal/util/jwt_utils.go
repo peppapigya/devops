@@ -12,14 +12,14 @@ import (
 // jwt 工具类
 
 type Claims struct {
-	ID       uint
+	ID       int64
 	Username string
 	Roles    []string
 	jwt.RegisteredClaims
 }
 
 // GetUserId 获取当前登录用户id
-func (claims *Claims) GetUserId() uint {
+func (claims *Claims) GetUserId() int64 {
 	if claims == nil {
 		return 0
 	}
@@ -42,7 +42,7 @@ func (claims *Claims) GetRoles() []string {
 }
 
 // GenerateJwtToken 生成jwt token
-func GenerateJwtToken(ID uint, username string, roles []string) (string, error) {
+func GenerateJwtToken(ID int64, username string, roles []string) (string, error) {
 	jwtProperties := config.GetGlobalConfig().Jwt
 	claims := Claims{
 		ID:       ID,
@@ -77,7 +77,7 @@ func ParseToken(tokenStr string) (*Claims, error) {
 }
 
 // GenerateRefreshToken 生成refresh token
-func GenerateRefreshToken(ID uint) (string, error) {
+func GenerateRefreshToken(ID int64) (string, error) {
 	jwtProperties := config.GetGlobalConfig().Jwt
 	claims := Claims{
 		ID: ID,

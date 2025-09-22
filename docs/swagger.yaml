@@ -1,0 +1,79 @@
+basePath: /api/v1
+definitions:
+  common.Response:
+    properties:
+      code:
+        type: integer
+      data: {}
+      msg:
+        type: string
+    type: object
+  dto.CaptchaResponse:
+    properties:
+      captchaId:
+        type: string
+      code:
+        type: string
+    type: object
+  dto.LoginRequest:
+    properties:
+      captchaId:
+        type: string
+      code:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - captchaId
+    - code
+    - password
+    - username
+    type: object
+host: localhost:8081
+info:
+  contact: {}
+  description: This is a k8s management platform API documentation
+  title: K8s Platform API
+  version: "1.0"
+paths:
+  /api/test:
+    get:
+      description: 测试
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: 测试
+      tags:
+      - 测试
+  /sysUser/login:
+    post:
+      parameters:
+      - description: 登录请求参数
+        in: body
+        name: loginRequest
+        required: true
+        schema:
+          $ref: '#/definitions/dto.LoginRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.CaptchaResponse'
+              type: object
+      security:
+      - Bearer: []
+      summary: 用户登录
+      tags:
+      - 用户管理
+securityDefinitions:
+  Bearer:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
