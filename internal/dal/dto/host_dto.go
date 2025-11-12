@@ -9,20 +9,21 @@ type HostPageRequest struct {
 
 // CreateHostDTO 创建主机请求参数
 type CreateHostDTO struct {
-	HostName     string `json:"host_name" validate:"required"`
+	HostName     string `json:"hostName" validate:"required"`
 	Address      string `json:"address" validate:"required"`
-	HostPort     int32  `json:"host_port" validate:"required"`
+	HostPort     int32  `json:"hostPort" validate:"required"`
 	Username     string `json:"username" validate:"required"`
-	HostPassword string `json:"host_password" validate:"required"`
+	HostPassword string `json:"hostPassword" validate:"required"`
 	Remark       string `json:"remark"`
 }
 
 // UpdateHostDTO 更新主机请求参数
 type UpdateHostDTO struct {
-	HostName     string `json:"host_name" validate:"required"`
+	ID           uint32 `json:"id" validate:"required"`
+	HostName     string `json:"hostName" validate:"required"`
 	Address      string `json:"address" validate:"required"`
-	HostPort     int32  `json:"host_port" validate:"required"`
+	HostPort     int32  `json:"hostPort" validate:"required"`
 	Username     string `json:"username" validate:"required"`
-	HostPassword string `json:"host_password"`
+	HostPassword string `json:"hostPassword"`
 	Remark       string `json:"remark"`
 }

@@ -23,7 +23,7 @@ func NewHostMapper(DB *gorm.DB) *HostMapper {
 }
 
 // SelectHostById 通过主机id获取主机信息
-func (hostMapper *HostMapper) SelectHostById(id int64) (*model.Host, error) {
+func (hostMapper *HostMapper) SelectHostById(id int) (*model.Host, error) {
 	host := hostMapper.query.Host
 	return hostMapper.query.Host.WithContext(context.Background()).
 		Where(host.ID.Eq(uint32(id))).First()
@@ -35,14 +35,14 @@ func (hostMapper *HostMapper) SelectPageByCondition(request dto.HostPageRequest)
 }
 
 // UpdateHost 更新主机信息
-func (hostMapper *HostMapper) UpdateHost(id int64, host *model.Host) error {
+func (hostMapper *HostMapper) UpdateHost(host *model.Host) error {
 	_, err := hostMapper.query.Host.WithContext(context.Background()).
-		Where(hostMapper.query.Host.ID.Eq(uint32(id))).Updates(host)
+		Where(hostMapper.query.Host.ID.Eq(host.ID)).Updates(host)
 	return err
 }
 
 // DeleteHostById 删除主机
-func (hostMapper *HostMapper) DeleteHostById(id int64) error {
+func (hostMapper *HostMapper) DeleteHostById(id int) error {
 	_, err := hostMapper.query.Host.WithContext(context.Background()).
 		Where(hostMapper.query.Host.ID.Eq(uint32(id))).Delete()
 	return err

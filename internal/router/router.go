@@ -12,5 +12,6 @@ func InitRouter(r *gin.Engine) {
 	{
 		r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 		InitUserRouter(api)
+		InitHostsRouter(api)
 	}
 }

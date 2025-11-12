@@ -23,6 +23,9 @@ var (
 	CaptchaError         = NewErrorCode(10005, "验证码错误")
 	GenerateCaptchaError = NewErrorCode(10006, "生成验证码错误")
 	CaptchaNotExist      = NewErrorCode(10007, "验证码不存在")
+	// =======================  主机相关 ========================
+	HostNotExist    = NewErrorCode(20001, "主机不存在")
+	HostUnreachable = NewErrorCode(20002, "主机不可达")
 )
 
 // NewErrorCode 创建错误码，方便后续业务调用
