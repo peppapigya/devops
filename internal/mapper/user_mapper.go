@@ -56,3 +56,16 @@ func (userMapper *UserMapper) UpdateStatusByUserId(id int64, status string) erro
 func (userMapper *UserMapper) GetBaseMapper() query.ISystemUserDo {
 	return userMapper.query.SystemUser.WithContext(context.Background())
 }
+
+// DeleteUserById 删除用户
+func (userMapper *UserMapper) DeleteUserById(id int64) error {
+	user := userMapper.query.SystemUser
+	_, err := userMapper.GetBaseMapper().WithContext(context.Background()).Where(user.ID.Eq(id)).Delete()
+	return err
+}
+
+// 添加用户信息到数据库
+func (userMapper *UserMapper) InsertUser(sysUser *model.SystemUser) error {
+	err := userMapper.GetBaseMapper().WithContext(context.Background()).Create(sysUser)
+	return err
+}

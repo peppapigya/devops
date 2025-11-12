@@ -2,6 +2,7 @@ package service
 
 import (
 	"k8s-platform-go/internal/common"
+	"k8s-platform-go/internal/convert"
 	"k8s-platform-go/internal/dal/dto"
 	"k8s-platform-go/internal/dal/model"
 	"k8s-platform-go/internal/dal/redis"
@@ -152,6 +153,26 @@ func (userService *UserService) GetCaptcha() (dto.CaptchaResponse, *common.Error
 		CaptchaId: id,
 		Code:      code,
 	}, nil
+}
+
+func (userService *UserService) DeleteUserById(context *gin.Context, id int64) {
+	err := userService.userMapper.DeleteUserById(id)
+	if err != nil {
+		log.Printf("删除用户失败: %v", err)
+		common.Fail(context, common.ServerError)
+	}
+	common.Success(context, true)
+}
+
+func (userService *UserService) AddUser(context *gin.Context, request dto.UserSaveRequest) {
+	sysUser := convert.UserDtoToUserDO(&request)
+	err := userService.userMapper.InsertUser(sysUser)
+
+	if err != nil {
+		log.Printf("添加用户失败: %v", err)
+		common.Fail(context, common.ServerError)
+	}
+	common.Success(context, true)
 }
 
 func getAccessTokenAndRefreshToken(c *gin.Context, userDO *model.SystemUser) (string, string, error) {

@@ -9,18 +9,117 @@
     "host": "localhost:8081",
     "basePath": "/api/v1",
     "paths": {
-        "/api/test": {
+        "/sysUser/": {
+            "put": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "tags": [
+                    "用户管理"
+                ],
+                "summary": "更新用户信息",
+                "parameters": [
+                    {
+                        "description": "更新用户请求参数",
+                        "name": "updateUserRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.UserSaveRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/common.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/sysUser/deleteUserById": {
+            "delete": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "tags": [
+                    "用户管理"
+                ],
+                "summary": "删除用户",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "用户id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/common.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/sysUser/getCaptcha": {
+            "get": {
+                "tags": [
+                    "用户管理"
+                ],
+                "summary": "获取验证码",
+                "responses": {}
+            }
+        },
+        "/sysUser/getUserById": {
             "get": {
                 "security": [
                     {
-                        "ApiKeyAuth": []
+                        "Bearer": []
                     }
                 ],
-                "description": "测试",
                 "tags": [
-                    "测试"
+                    "用户管理"
                 ],
-                "summary": "测试",
+                "summary": "获取根据用户id获取用户信息",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "用户id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/sysUser/getUserPage": {
+            "post": {
+                "tags": [
+                    "用户管理"
+                ],
+                "summary": "获取用户列表分页",
+                "parameters": [
+                    {
+                        "description": "用户列表分页请求参数",
+                        "name": "userPageRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.UserPageRequest"
+                        }
+                    }
+                ],
                 "responses": {}
             }
         },
@@ -46,26 +145,45 @@
                         }
                     }
                 ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
+                "responses": {}
+            }
+        },
+        "/sysUser/refreshToken": {
+            "post": {
+                "tags": [
+                    "用户管理"
+                ],
+                "summary": "刷新token",
+                "parameters": [
+                    {
+                        "description": "刷新token请求参数",
+                        "name": "refreshTokenRequest",
+                        "in": "body",
+                        "required": true,
                         "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/common.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/definitions/dto.CaptchaResponse"
-                                        }
-                                    }
-                                }
-                            ]
+                            "$ref": "#/definitions/dto.RefreshTokenRequest"
                         }
                     }
-                }
+                ],
+                "responses": {}
+            }
+        },
+        "/sysUser/updateUserStatus": {
+            "put": {
+                "tags": [
+                    "用户管理"
+                ],
+                "summary": "更新用户状态",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "用户状态",
+                        "name": "status",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {}
             }
         }
     },
@@ -78,17 +196,6 @@
                 },
                 "data": {},
                 "msg": {
-                    "type": "string"
-                }
-            }
-        },
-        "dto.CaptchaResponse": {
-            "type": "object",
-            "properties": {
-                "captchaId": {
-                    "type": "string"
-                },
-                "code": {
                     "type": "string"
                 }
             }
@@ -112,6 +219,90 @@
                     "type": "string"
                 },
                 "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.RefreshTokenRequest": {
+            "type": "object",
+            "required": [
+                "refreshToken"
+            ],
+            "properties": {
+                "refreshToken": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.UserPageRequest": {
+            "type": "object",
+            "properties": {
+                "pageNum": {
+                    "type": "integer",
+                    "default": 1
+                },
+                "pageSize": {
+                    "type": "integer",
+                    "default": 10
+                },
+                "userName": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.UserSaveRequest": {
+            "type": "object",
+            "properties": {
+                "avatar": {
+                    "description": "头像地址",
+                    "type": "string"
+                },
+                "dept_id": {
+                    "description": "部门ID",
+                    "type": "integer"
+                },
+                "email": {
+                    "description": "用户邮箱",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "用户ID",
+                    "type": "integer"
+                },
+                "login_date": {
+                    "description": "最后登录时间",
+                    "type": "string"
+                },
+                "login_ip": {
+                    "description": "最后登录IP",
+                    "type": "string"
+                },
+                "mobile": {
+                    "description": "手机号码",
+                    "type": "string"
+                },
+                "nickname": {
+                    "description": "用户昵称",
+                    "type": "string"
+                },
+                "post_ids": {
+                    "description": "岗位编号数组",
+                    "type": "string"
+                },
+                "remark": {
+                    "description": "备注",
+                    "type": "string"
+                },
+                "sex": {
+                    "description": "用户性别",
+                    "type": "integer"
+                },
+                "status": {
+                    "description": "帐号状态（0正常 1停用）",
+                    "type": "integer"
+                },
+                "username": {
+                    "description": "用户账号",
                     "type": "string"
                 }
             }
