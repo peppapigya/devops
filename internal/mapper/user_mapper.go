@@ -64,7 +64,7 @@ func (userMapper *UserMapper) DeleteUserById(id int64) error {
 	return err
 }
 
-// 添加用户信息到数据库
+// InsertUser 添加用户信息到数据库
 func (userMapper *UserMapper) InsertUser(sysUser *model.SystemUser) error {
 	err := userMapper.GetBaseMapper().WithContext(context.Background()).Create(sysUser)
 	return err

@@ -16,12 +16,22 @@ import (
 
 // Injectors from wire.go:
 
+// 初始化用户控制器
 func InitializeUserController() *controller.UserController {
 	gormDB := db.NewDB()
 	userMapper := mapper.NewUserMapper(gormDB)
-	redisC := db.InitRedis()
-	redisClient := redis.NewClient(redisC)
+	client := db.InitRedis()
+	redisClient := redis.NewClient(client)
 	userService := service.NewUserService(userMapper, redisClient)
 	userController := controller.NewUserController(userService)
 	return userController
+}
+
+// 初始化主机控制器
+func InitializeHostController() *controller.HostController {
+	gormDB := db.NewDB()
+	hostMapper := mapper.NewHostMapper(gormDB)
+	hostService := service.NewHostService(hostMapper)
+	hostController := controller.NewHostController(hostService)
+	return hostController
 }

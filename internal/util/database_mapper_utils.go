@@ -14,7 +14,7 @@ type PageInfoResponse[T any] struct {
 	// 数据总数
 	Total int64 `json:"total"`
 	// 数据
-	Data []T `json:"data"`
+	Data interface{} `json:"data"`
 }
 
 // WhereIf 条件查询
@@ -52,13 +52,15 @@ func FindPageResult[T any](dao gen.DO, pageNum, pageSize int, conditions ...gen.
 	if err != nil {
 		return result, err
 	}
+
 	// 拼接结果
 	result = PageInfoResponse[T]{
 		PageNum:  pageNum,
 		PageSize: pageSize,
 		Total:    total,
-		Data:     list.([]T),
+		Data:     list,
 	}
+
 	return result, nil
 
 }
