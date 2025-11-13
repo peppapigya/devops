@@ -48,7 +48,7 @@ func FailWithMsg(c *gin.Context, msg string) {
 }
 
 // PageInfoResponse 分页信息
-type PageInfoResponse struct {
+type PageInfoResponse[T any] struct {
 	// 当前页码
 	PageNum int `json:"pageNum"`
 	// 页面数量
@@ -56,5 +56,5 @@ type PageInfoResponse struct {
 	// 数据总数
 	Total int64 `json:"total"`
 	// 数据
-	Data interface{} `json:"data"`
+	Data []T `json:"data"`
 }

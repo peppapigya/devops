@@ -9,16 +9,29 @@ package wireinfo
 import (
 	"k8s-platform-go/internal/config/db"
 	"k8s-platform-go/internal/controller"
+	"k8s-platform-go/internal/dal/redis"
 	"k8s-platform-go/internal/mapper"
 	"k8s-platform-go/internal/service"
 )
 
 // Injectors from wire.go:
 
+// 初始化用户控制器
 func InitializeUserController() *controller.UserController {
 	gormDB := db.NewDB()
 	userMapper := mapper.NewUserMapper(gormDB)
-	userService := service.NewUserService(userMapper)
+	client := db.InitRedis()
+	redisClient := redis.NewClient(client)
+	userService := service.NewUserService(userMapper, redisClient)
 	userController := controller.NewUserController(userService)
 	return userController
+}
+
+// 初始化主机控制器
+func InitializeHostController() *controller.HostController {
+	gormDB := db.NewDB()
+	hostMapper := mapper.NewHostMapper(gormDB)
+	hostService := service.NewHostService(hostMapper)
+	hostController := controller.NewHostController(hostService)
+	return hostController
 }

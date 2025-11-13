@@ -1,0 +1,209 @@
+basePath: /api/v1
+definitions:
+  common.Response:
+    properties:
+      code:
+        type: integer
+      data: {}
+      msg:
+        type: string
+    type: object
+  dto.LoginRequest:
+    properties:
+      captchaId:
+        type: string
+      code:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - captchaId
+    - code
+    - password
+    - username
+    type: object
+  dto.RefreshTokenRequest:
+    properties:
+      refreshToken:
+        type: string
+    required:
+    - refreshToken
+    type: object
+  dto.UserPageRequest:
+    properties:
+      pageNum:
+        default: 1
+        type: integer
+      pageSize:
+        default: 10
+        type: integer
+      userName:
+        type: string
+    type: object
+  dto.UserSaveRequest:
+    properties:
+      avatar:
+        description: 头像地址
+        type: string
+      dept_id:
+        description: 部门ID
+        type: integer
+      email:
+        description: 用户邮箱
+        type: string
+      id:
+        description: 用户ID
+        type: integer
+      login_date:
+        description: 最后登录时间
+        type: string
+      login_ip:
+        description: 最后登录IP
+        type: string
+      mobile:
+        description: 手机号码
+        type: string
+      nickname:
+        description: 用户昵称
+        type: string
+      post_ids:
+        description: 岗位编号数组
+        type: string
+      remark:
+        description: 备注
+        type: string
+      sex:
+        description: 用户性别
+        type: integer
+      status:
+        description: 帐号状态（0正常 1停用）
+        type: integer
+      username:
+        description: 用户账号
+        type: string
+    type: object
+host: localhost:8081
+info:
+  contact: {}
+  description: This is a k8s management platform API documentation
+  title: K8s Platform API
+  version: "1.0"
+paths:
+  /sysUser/:
+    put:
+      parameters:
+      - description: 更新用户请求参数
+        in: body
+        name: updateUserRequest
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UserSaveRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - Bearer: []
+      summary: 更新用户信息
+      tags:
+      - 用户管理
+  /sysUser/deleteUserById:
+    delete:
+      parameters:
+      - description: 用户id
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - Bearer: []
+      summary: 删除用户
+      tags:
+      - 用户管理
+  /sysUser/getCaptcha:
+    get:
+      responses: {}
+      summary: 获取验证码
+      tags:
+      - 用户管理
+  /sysUser/getUserById:
+    get:
+      parameters:
+      - description: 用户id
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses: {}
+      security:
+      - Bearer: []
+      summary: 获取根据用户id获取用户信息
+      tags:
+      - 用户管理
+  /sysUser/getUserPage:
+    post:
+      parameters:
+      - description: 用户列表分页请求参数
+        in: body
+        name: userPageRequest
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UserPageRequest'
+      responses: {}
+      summary: 获取用户列表分页
+      tags:
+      - 用户管理
+  /sysUser/login:
+    post:
+      parameters:
+      - description: 登录请求参数
+        in: body
+        name: loginRequest
+        required: true
+        schema:
+          $ref: '#/definitions/dto.LoginRequest'
+      responses: {}
+      security:
+      - Bearer: []
+      summary: 用户登录
+      tags:
+      - 用户管理
+  /sysUser/refreshToken:
+    post:
+      parameters:
+      - description: 刷新token请求参数
+        in: body
+        name: refreshTokenRequest
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RefreshTokenRequest'
+      responses: {}
+      summary: 刷新token
+      tags:
+      - 用户管理
+  /sysUser/updateUserStatus:
+    put:
+      parameters:
+      - description: 用户状态
+        in: query
+        name: status
+        required: true
+        type: string
+      responses: {}
+      summary: 更新用户状态
+      tags:
+      - 用户管理
+securityDefinitions:
+  Bearer:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

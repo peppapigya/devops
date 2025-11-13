@@ -1,12 +1,24 @@
 package main
 
+// @title K8s Platform API
+// @version 1.0
+// @description This is a k8s management platform API documentation
+// @host localhost:8081
+// @BasePath /api/v1
+// @securityDefinitions.apikey Bearer
+// @in header
+// @name Authorization
 import (
 	"fmt"
+	_ "k8s-platform-go/docs"
+
 	"k8s-platform-go/internal/common/exception"
 	"k8s-platform-go/internal/common/middleware"
 	"k8s-platform-go/internal/config"
 	"k8s-platform-go/internal/config/db"
+
 	"k8s-platform-go/internal/router"
+
 	"k8s-platform-go/internal/util"
 	"log"
 
