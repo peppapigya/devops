@@ -31,7 +31,12 @@ func (hostMapper *HostMapper) SelectHostById(id int) (*model.Host, error) {
 
 // SelectPageByCondition 分页查询主机信息
 func (hostMapper *HostMapper) SelectPageByCondition(request dto.HostPageRequest) (util.PageInfoResponse[model.Host], error) {
-	return util.FindPageResult[model.Host](hostMapper.query.Host.DO, request.PageNum, request.PageSize)
+	host := hostMapper.query.Host
+	return util.FindPageResult[model.Host](hostMapper.query.Host.DO, request.PageNum, request.PageSize, false,
+		util.WhereIf(request.Keyword != "", host.HostName.Like("%"+request.Keyword+"%")),
+		util.WhereIf(request.Keyword != "", host.Address.Like("%"+request.Keyword+"%")),
+		util.WhereIf(request.Keyword != "", host.Username.Like("%"+request.Keyword+"%")),
+	)
 }
 
 // UpdateHost 更新主机信息
