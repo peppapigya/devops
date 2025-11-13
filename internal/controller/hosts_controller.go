@@ -109,16 +109,11 @@ func (hostController *HostController) TestConnection(c *gin.Context) {
 // @Param id path int true "主机ID"
 // @Router /hosts/{id}/inspect [post]
 func (hostController *HostController) InspectHost(c *gin.Context) {
-	var id int
-	util.GetParam(c, "id", &id, func(param interface{}) {
-		if id <= 0 {
-			common.Fail(c, common.BadRequest)
-			c.Abort()
-			return
-		}
-	})
-
-	if c.IsAborted() {
+	idStr := c.Param("id")
+	id, err1 := strconv.Atoi(idStr)
+	if err1 != nil {
+		common.Fail(c, common.BadRequest)
+		c.Abort()
 		return
 	}
 

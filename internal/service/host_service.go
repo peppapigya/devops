@@ -1,20 +1,28 @@
 package service
 
 import (
+	"fmt"
 	"k8s-platform-go/internal/common"
 	"k8s-platform-go/internal/dal/dto"
 	"k8s-platform-go/internal/dal/model"
 	"k8s-platform-go/internal/mapper"
 	"k8s-platform-go/internal/util"
 	"log"
+	"sync"
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/ssh"
 )
 
 type HostService struct {
 	hostMapper *mapper.HostMapper
 	context    *gin.Context
+}
+
+type item struct {
+	name string
+	cmd  string
 }
 
 func NewHostService(hostMapper *mapper.HostMapper) *HostService {
@@ -96,8 +104,15 @@ func (hostService *HostService) TestConnection(id int) (string, *common.ErrorCod
 	if host == nil {
 		return "主机不存在", common.HostNotExist
 	}
+	remoteHostInfo := &util.HostInfo{
+		Address:  host.Address,
+		Port:     int(host.HostPort),
+		Username: host.Username,
+		Password: *host.HostPassword,
+		Timeout:  5 * time.Second,
+	}
 	// 测试ping主机
-	res, err := util.TestSSHConnection(host.Address, int(host.HostPort), host.Username, *host.HostPassword, "", 5*time.Second)
+	res, err := remoteHostInfo.TestSSHConnection()
 	if err != nil || !res {
 		return "连接失败", common.HostUnreachable
 	}
@@ -106,8 +121,6 @@ func (hostService *HostService) TestConnection(id int) (string, *common.ErrorCod
 }
 
 func (hostService *HostService) InspectHost(id int) (interface{}, *common.ErrorCode) {
-	// 这里应该实现实际的巡检逻辑
-	// 目前返回模拟结果
 	host, err := hostService.hostMapper.SelectHostById(id)
 	if err != nil {
 		return nil, common.ServerError
@@ -116,17 +129,99 @@ func (hostService *HostService) InspectHost(id int) (interface{}, *common.ErrorC
 	if host == nil {
 		return nil, common.ServerError
 	}
+	remoteHostInfo := &util.HostInfo{
+		Address:  host.Address,
+		Port:     int(host.HostPort),
+		Username: host.Username,
+		Password: *host.HostPassword,
+		Timeout:  5 * time.Second,
+	}
+	info, err := CheckHostInfo(remoteHostInfo)
+	if err != nil {
+		return nil, common.NewErrorCode(500, err.Error())
+	}
+	return info, nil
+}
 
-	// 模拟巡检结果
-	result := map[string]interface{}{
-		"id":           host.ID,
-		"host_name":    host.HostName,
-		"address":      host.Address,
-		"status":       "online",
-		"cpu_usage":    "45%",
-		"memory_usage": "60%",
-		"disk_usage":   "70%",
+func CheckHostInfo(hostInfo *util.HostInfo) (interface{}, error) {
+	// 远程连接
+	client, err := hostInfo.Connection()
+	if err != nil {
+		log.Printf("连接失败: %v", err)
+		return nil, err
+	}
+	defer client.Close()
+
+	// 声明需要执行的命令
+	commands := []item{
+		{"主机名：", "hostname"},
+		{"操作系统信息：", "cat /etc/os-release"},
+		{"内核信息：", "uname -r"},
+		{"uptime", "uptime"},
+		{"负载信息：", "cat /proc/loadavg || w"},
+		{"cpu信息：", "cat /proc/cpuinfo | head -n 50"},
+		{"内存：", "free -m"},
+		{"磁盘信息：", "df -hP"},
+		{"挂载详情", "mount | head -n 200"},
+		{"top", "COLUMNS=200 top -b -n1 | head -n 60"},
+		{"进程信息：", "ps -eo pid,ppid,user,%cpu,%mem,state,cmd --sort=-%cpu | head -n 50"},
+		{"net_if", "ip -o addr"},
+		{"netstat", "ss -tuanp | head -n 100 || netstat -an | head -n 100"},
+		{"proc_count", "ls /proc | wc -l"},
 	}
 
+	result, err := ExecuteCommand(client, commands)
+	data, err := util.BeautifyRawData(result)
+	if err != nil {
+		log.Printf("美化数据失败: %v", err)
+		return result, err
+	}
+	fmt.Printf("数据美化成功: %v", data)
+	return data, nil
+}
+
+func ExecuteCommand(client *ssh.Client, commands []item) (map[string]string, error) {
+	// 执行命令
+	result := make(map[string]string, len(commands))
+	session, err := client.NewSession()
+	if err != nil {
+		log.Printf("创建会话失败: %v", err)
+		return result, err
+	}
+	defer session.Close()
+	var wg sync.WaitGroup
+	var mutex sync.Mutex
+
+	sessionPool := make(chan struct{}, 5)
+
+	for _, it := range commands {
+		wg.Add(1)
+		go func(cmdItem item) {
+			defer wg.Done()
+
+			sessionPool <- struct{}{}
+			defer func() { <-sessionPool }()
+
+			session, err := client.NewSession()
+			if err != nil {
+				mutex.Lock()
+				result[cmdItem.name] = "创建会话失败"
+				mutex.Unlock()
+				return
+			}
+			defer session.Close()
+
+			output, err := session.Output(cmdItem.cmd)
+			mutex.Lock()
+			if err != nil {
+				result[cmdItem.name] = "执行命令失败: " + err.Error()
+			} else {
+				result[cmdItem.name] = string(output)
+			}
+			mutex.Unlock()
+		}(it)
+	}
+
+	wg.Wait()
 	return result, nil
 }
