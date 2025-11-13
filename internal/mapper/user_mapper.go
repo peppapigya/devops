@@ -41,7 +41,7 @@ func (userMapper *UserMapper) SelectUserByName(username string) (*model.SystemUs
 func (userMapper *UserMapper) SelectPageByCondition(request dto.UserPageRequest) (util.PageInfoResponse[model.SystemUser], error) {
 
 	user := userMapper.query.SystemUser
-	return util.FindPageResult[model.SystemUser](userMapper.query.SystemUser.DO, request.PageNum, request.PageSize,
+	return util.FindPageResult[model.SystemUser](userMapper.query.SystemUser.DO, request.PageNum, request.PageSize, false,
 		util.WhereIf(request.Username != "", user.Username.Like("%"+request.Username+"%")),
 	)
 }

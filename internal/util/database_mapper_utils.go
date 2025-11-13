@@ -1,6 +1,8 @@
 package util
 
 import (
+	"log"
+
 	"gorm.io/gen"
 	"gorm.io/gorm"
 )
@@ -26,29 +28,37 @@ func WhereIf(condition bool, cond gen.Condition) gen.Condition {
 }
 
 // FindPageResult 查询分页结果
-func FindPageResult[T any](dao gen.DO, pageNum, pageSize int, conditions ...gen.Condition) (PageInfoResponse[T], error) {
+func FindPageResult[T any](dao gen.DO, pageNum, pageSize int, isAnd bool, conditions ...gen.Condition) (PageInfoResponse[T], error) {
 	if pageNum <= 0 {
 		pageNum = 1
 	}
 	if pageSize <= 0 {
 		pageSize = 10
 	}
-	countDAO := dao.UnderlyingDB().Session(&gorm.Session{NewDB: true}).Model(dao.TableName)
+	countDAO := dao.UnderlyingDB().Session(&gorm.Session{NewDB: true}).Table(dao.TableName())
+	queryDao := dao.Session(&gorm.Session{NewDB: true})
+	// 去除条件为空的元素
+	conditions = RemoveEmptyConditions(conditions...)
 	// 拼接条件
 	for _, cond := range conditions {
-		if cond != nil {
+		if isAnd {
 			countDAO = countDAO.Where(cond)
+			queryDao = queryDao.Where(cond)
+		} else {
+			countDAO = countDAO.Or(cond)
+			queryDao = queryDao.Or(cond)
 		}
 	}
 
 	var result PageInfoResponse[T]
 	// 查询总数
-	total, err := dao.Count()
-	if err != nil {
+	var total int64
+	if err := countDAO.Count(&total).Error; err != nil {
+		log.Printf("查询总数失败: %v", err)
 		return result, err
 	}
 	offset := (pageNum - 1) * pageSize
-	list, err := dao.Offset(offset).Limit(pageSize).Find()
+	list, err := queryDao.Offset(offset).Limit(pageSize).Find()
 	if err != nil {
 		return result, err
 	}
@@ -63,4 +73,13 @@ func FindPageResult[T any](dao gen.DO, pageNum, pageSize int, conditions ...gen.
 
 	return result, nil
 
+}
+
+func RemoveEmptyConditions(conditions ...gen.Condition) (result []gen.Condition) {
+	for _, condition := range conditions {
+		if condition != nil {
+			result = append(result, condition)
+		}
+	}
+	return result
 }
