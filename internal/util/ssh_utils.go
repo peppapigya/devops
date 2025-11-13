@@ -9,21 +9,39 @@ import (
 	"golang.org/x/crypto/ssh"
 )
 
-func TestSSHConnection(host string, port int, username, password string, privateKey string, timeout time.Duration) (bool, error) {
-	address := net.JoinHostPort(host, strconv.Itoa(port))
+type HostInfo struct {
+	Address  string
+	Port     int
+	Username string
+	Password string
+	Timeout  time.Duration
+}
 
+// Connection 通过ssh连接远程主机
+func (host *HostInfo) Connection() (*ssh.Client, error) {
+	address := net.JoinHostPort(host.Address, strconv.Itoa(host.Port))
 	config := &ssh.ClientConfig{
-		User:            username,
+		User:            host.Username,
 		Auth:            []ssh.AuthMethod{},
 		HostKeyCallback: ssh.InsecureIgnoreHostKey(),
-		Timeout:         timeout,
+		Timeout:         host.Timeout,
 	}
-	if password != "" {
-		config.Auth = append(config.Auth, ssh.Password(password))
+	if host.Password != "" {
+		config.Auth = append(config.Auth, ssh.Password(host.Password))
 	}
 	// 建立连接
 	client, err := ssh.Dial("tcp", address, config)
 	if err != nil {
+		return nil, err
+	}
+	return client, nil
+}
+
+func (host *HostInfo) TestSSHConnection() (bool, error) {
+
+	client, err := host.Connection()
+	if err != nil {
+		log.Printf("连接失败: %v", err)
 		return false, err
 	}
 	defer client.Close()
