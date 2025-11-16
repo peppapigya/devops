@@ -14,13 +14,13 @@ const TableNameSystemOperateLog = "system_operate_log"
 
 // SystemOperateLog 操作日志记录 V2 版本
 type SystemOperateLog struct {
-	ID            int64          `gorm:"column:id;type:bigint(20);primaryKey;autoIncrement:true;comment:日志主键" json:"id"`                  // 日志主键
+	ID            int64          `gorm:"column:id;type:bigint;primaryKey;autoIncrement:true;comment:日志主键" json:"id"`                      // 日志主键
 	TraceID       string         `gorm:"column:trace_id;type:varchar(64);not null;comment:链路追踪编号" json:"trace_id"`                        // 链路追踪编号
-	UserID        int64          `gorm:"column:user_id;type:bigint(20);not null;comment:用户编号" json:"user_id"`                             // 用户编号
-	UserType      int32          `gorm:"column:user_type;type:tinyint(4);not null;comment:用户类型" json:"user_type"`                         // 用户类型
+	UserID        int64          `gorm:"column:user_id;type:bigint;not null;comment:用户编号" json:"user_id"`                                 // 用户编号
+	UserType      int32          `gorm:"column:user_type;type:tinyint;not null;comment:用户类型" json:"user_type"`                            // 用户类型
 	Type          string         `gorm:"column:type;type:varchar(50);not null;comment:操作模块类型" json:"type"`                                // 操作模块类型
 	SubType       string         `gorm:"column:sub_type;type:varchar(50);not null;comment:操作名" json:"sub_type"`                           // 操作名
-	BizID         int64          `gorm:"column:biz_id;type:bigint(20);not null;comment:操作数据模块编号" json:"biz_id"`                           // 操作数据模块编号
+	BizID         int64          `gorm:"column:biz_id;type:bigint;not null;comment:操作数据模块编号" json:"biz_id"`                               // 操作数据模块编号
 	Action        string         `gorm:"column:action;type:varchar(2000);not null;comment:操作内容" json:"action"`                            // 操作内容
 	Success       []uint8        `gorm:"column:success;type:bit(1);not null;default:b'1';comment:操作结果" json:"success"`                    // 操作结果
 	Extra         string         `gorm:"column:extra;type:varchar(2000);not null;comment:拓展字段" json:"extra"`                              // 拓展字段

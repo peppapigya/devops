@@ -14,9 +14,9 @@ const TableNameSystemUserPost = "system_user_post"
 
 // SystemUserPost 用户岗位表
 type SystemUserPost struct {
-	ID        int64          `gorm:"column:id;type:bigint(20);primaryKey;autoIncrement:true;comment:id" json:"id"`                    // id
-	UserID    int64          `gorm:"column:user_id;type:bigint(20);not null;comment:用户ID" json:"user_id"`                             // 用户ID
-	PostID    int64          `gorm:"column:post_id;type:bigint(20);not null;comment:岗位ID" json:"post_id"`                             // 岗位ID
+	ID        int64          `gorm:"column:id;type:bigint;primaryKey;autoIncrement:true;comment:id" json:"id"`                        // id
+	UserID    int64          `gorm:"column:user_id;type:bigint;not null;comment:用户ID" json:"user_id"`                                 // 用户ID
+	PostID    int64          `gorm:"column:post_id;type:bigint;not null;comment:岗位ID" json:"post_id"`                                 // 岗位ID
 	Creator   *string        `gorm:"column:creator;type:varchar(64);comment:创建者" json:"creator"`                                      // 创建者
 	CreateAt  time.Time      `gorm:"column:create_at;type:datetime;not null;default:CURRENT_TIMESTAMP;comment:创建时间" json:"create_at"` // 创建时间
 	Updater   *string        `gorm:"column:updater;type:varchar(64);comment:更新者" json:"updater"`                                      // 更新者

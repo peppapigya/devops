@@ -14,9 +14,9 @@ const TableNameSystemRoleMenu = "system_role_menu"
 
 // SystemRoleMenu 角色和菜单关联表
 type SystemRoleMenu struct {
-	ID        int64          `gorm:"column:id;type:bigint(20);primaryKey;autoIncrement:true;comment:自增编号" json:"id"`                  // 自增编号
-	RoleID    int64          `gorm:"column:role_id;type:bigint(20);not null;comment:角色ID" json:"role_id"`                             // 角色ID
-	MenuID    int64          `gorm:"column:menu_id;type:bigint(20);not null;comment:菜单ID" json:"menu_id"`                             // 菜单ID
+	ID        int64          `gorm:"column:id;type:bigint;primaryKey;autoIncrement:true;comment:自增编号" json:"id"`                      // 自增编号
+	RoleID    int64          `gorm:"column:role_id;type:bigint;not null;comment:角色ID" json:"role_id"`                                 // 角色ID
+	MenuID    int64          `gorm:"column:menu_id;type:bigint;not null;comment:菜单ID" json:"menu_id"`                                 // 菜单ID
 	Creator   *string        `gorm:"column:creator;type:varchar(64);comment:创建者" json:"creator"`                                      // 创建者
 	CreateAt  time.Time      `gorm:"column:create_at;type:datetime;not null;default:CURRENT_TIMESTAMP;comment:创建时间" json:"create_at"` // 创建时间
 	Updater   *string        `gorm:"column:updater;type:varchar(64);comment:更新者" json:"updater"`                                      // 更新者

@@ -24,3 +24,21 @@ func InitializeHostController() *controller.HostController {
 	wire.Build(db.NewDB, mapper.NewHostMapper, service.NewHostService, controller.NewHostController)
 	return &controller.HostController{}
 }
+
+// 初始化部门控制器
+func InitializeDeptController() *controller.DeptController {
+	wire.Build(db.NewDB, mapper.NewDeptMapper, service.NewDeptService, controller.NewDeptController)
+	return &controller.DeptController{}
+}
+
+// 初始化字典类型控制器
+func InitializeDictTypeController() *controller.DictTypeController {
+	wire.Build(db.NewDB, mapper.NewDictTypeMapper, service.NewDictTypeService, controller.NewDictTypeController)
+	return &controller.DictTypeController{}
+}
+
+// 初始化菜单控制器
+func InitializeMenuController() *controller.MenuController {
+	wire.Build(db.NewDB, mapper.NewMenuMapper, service.NewMenuService, controller.NewMenuController)
+	return &controller.MenuController{}
+}

@@ -14,10 +14,10 @@ const TableNameSystemOauth2RefreshToken = "system_oauth2_refresh_token"
 
 // SystemOauth2RefreshToken OAuth2 刷新令牌
 type SystemOauth2RefreshToken struct {
-	ID           int64          `gorm:"column:id;type:bigint(20);primaryKey;autoIncrement:true;comment:编号" json:"id"`                    // 编号
-	UserID       int64          `gorm:"column:user_id;type:bigint(20);not null;comment:用户编号" json:"user_id"`                             // 用户编号
+	ID           int64          `gorm:"column:id;type:bigint;primaryKey;autoIncrement:true;comment:编号" json:"id"`                        // 编号
+	UserID       int64          `gorm:"column:user_id;type:bigint;not null;comment:用户编号" json:"user_id"`                                 // 用户编号
 	RefreshToken string         `gorm:"column:refresh_token;type:varchar(32);not null;comment:刷新令牌" json:"refresh_token"`                // 刷新令牌
-	UserType     int32          `gorm:"column:user_type;type:tinyint(4);not null;comment:用户类型" json:"user_type"`                         // 用户类型
+	UserType     int32          `gorm:"column:user_type;type:tinyint;not null;comment:用户类型" json:"user_type"`                            // 用户类型
 	ClientID     string         `gorm:"column:client_id;type:varchar(255);not null;comment:客户端编号" json:"client_id"`                      // 客户端编号
 	Scopes_      *string        `gorm:"column:scopes;type:varchar(255);comment:授权范围" json:"scopes"`                                      // 授权范围
 	ExpiresTime  time.Time      `gorm:"column:expires_time;type:datetime;not null;comment:过期时间" json:"expires_time"`                     // 过期时间

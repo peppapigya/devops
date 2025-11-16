@@ -14,17 +14,17 @@ const TableNameSystemMenu = "system_menu"
 
 // SystemMenu 菜单权限表
 type SystemMenu struct {
-	ID            int64          `gorm:"column:id;type:bigint(20);primaryKey;autoIncrement:true;comment:菜单ID" json:"id"`                  // 菜单ID
+	ID            int64          `gorm:"column:id;type:bigint;primaryKey;autoIncrement:true;comment:菜单ID" json:"id"`                      // 菜单ID
 	Name          string         `gorm:"column:name;type:varchar(50);not null;comment:菜单名称" json:"name"`                                  // 菜单名称
 	Permission    string         `gorm:"column:permission;type:varchar(100);not null;comment:权限标识" json:"permission"`                     // 权限标识
-	Type          int32          `gorm:"column:type;type:tinyint(4);not null;comment:菜单类型" json:"type"`                                   // 菜单类型
-	Sort          int32          `gorm:"column:sort;type:int(11);not null;comment:显示顺序" json:"sort"`                                      // 显示顺序
-	ParentID      int64          `gorm:"column:parent_id;type:bigint(20);not null;comment:父菜单ID" json:"parent_id"`                        // 父菜单ID
+	Type          int32          `gorm:"column:type;type:tinyint;not null;comment:菜单类型" json:"type"`                                      // 菜单类型
+	Sort          int32          `gorm:"column:sort;type:int;not null;comment:显示顺序" json:"sort"`                                          // 显示顺序
+	ParentID      int64          `gorm:"column:parent_id;type:bigint;not null;comment:父菜单ID" json:"parent_id"`                            // 父菜单ID
 	Path          *string        `gorm:"column:path;type:varchar(200);comment:路由地址" json:"path"`                                          // 路由地址
 	Icon          *string        `gorm:"column:icon;type:varchar(100);default:#;comment:菜单图标" json:"icon"`                                // 菜单图标
 	Component     *string        `gorm:"column:component;type:varchar(255);comment:组件路径" json:"component"`                                // 组件路径
 	ComponentName *string        `gorm:"column:component_name;type:varchar(255);comment:组件名" json:"component_name"`                       // 组件名
-	Status        int32          `gorm:"column:status;type:tinyint(4);not null;comment:菜单状态" json:"status"`                               // 菜单状态
+	Status        int32          `gorm:"column:status;type:tinyint;not null;comment:菜单状态" json:"status"`                                  // 菜单状态
 	Visible       []uint8        `gorm:"column:visible;type:bit(1);not null;default:b'1';comment:是否可见" json:"visible"`                    // 是否可见
 	KeepAlive     []uint8        `gorm:"column:keep_alive;type:bit(1);not null;default:b'1';comment:是否缓存" json:"keep_alive"`              // 是否缓存
 	AlwaysShow    []uint8        `gorm:"column:always_show;type:bit(1);not null;default:b'1';comment:是否总是显示" json:"always_show"`          // 是否总是显示

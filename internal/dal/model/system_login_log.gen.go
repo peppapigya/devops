@@ -14,13 +14,13 @@ const TableNameSystemLoginLog = "system_login_log"
 
 // SystemLoginLog 系统访问记录
 type SystemLoginLog struct {
-	ID        int64          `gorm:"column:id;type:bigint(20);primaryKey;autoIncrement:true;comment:访问ID" json:"id"`                  // 访问ID
-	LogType   int64          `gorm:"column:log_type;type:bigint(20);not null;comment:日志类型" json:"log_type"`                           // 日志类型
+	ID        int64          `gorm:"column:id;type:bigint;primaryKey;autoIncrement:true;comment:访问ID" json:"id"`                      // 访问ID
+	LogType   int64          `gorm:"column:log_type;type:bigint;not null;comment:日志类型" json:"log_type"`                               // 日志类型
 	TraceID   string         `gorm:"column:trace_id;type:varchar(64);not null;comment:链路追踪编号" json:"trace_id"`                        // 链路追踪编号
-	UserID    int64          `gorm:"column:user_id;type:bigint(20);not null;comment:用户编号" json:"user_id"`                             // 用户编号
-	UserType  int32          `gorm:"column:user_type;type:tinyint(4);not null;comment:用户类型" json:"user_type"`                         // 用户类型
+	UserID    int64          `gorm:"column:user_id;type:bigint;not null;comment:用户编号" json:"user_id"`                                 // 用户编号
+	UserType  int32          `gorm:"column:user_type;type:tinyint;not null;comment:用户类型" json:"user_type"`                            // 用户类型
 	Username  string         `gorm:"column:username;type:varchar(50);not null;comment:用户账号" json:"username"`                          // 用户账号
-	Result    int32          `gorm:"column:result;type:tinyint(4);not null;comment:登陆结果" json:"result"`                               // 登陆结果
+	Result    int32          `gorm:"column:result;type:tinyint;not null;comment:登陆结果" json:"result"`                                  // 登陆结果
 	UserIP    string         `gorm:"column:user_ip;type:varchar(50);not null;comment:用户 IP" json:"user_ip"`                           // 用户 IP
 	UserAgent string         `gorm:"column:user_agent;type:varchar(512);not null;comment:浏览器 UA" json:"user_agent"`                   // 浏览器 UA
 	Creator   *string        `gorm:"column:creator;type:varchar(64);comment:创建者" json:"creator"`                                      // 创建者

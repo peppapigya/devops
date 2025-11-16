@@ -14,12 +14,12 @@ const TableNameSystemDictDatum = "system_dict_data"
 
 // SystemDictDatum 字典数据表
 type SystemDictDatum struct {
-	ID        int64          `gorm:"column:id;type:bigint(20);primaryKey;autoIncrement:true;comment:字典编码" json:"id"`                  // 字典编码
-	Sort      int32          `gorm:"column:sort;type:int(11);not null;comment:字典排序" json:"sort"`                                      // 字典排序
+	ID        int64          `gorm:"column:id;type:bigint;primaryKey;autoIncrement:true;comment:字典编码" json:"id"`                      // 字典编码
+	Sort      int32          `gorm:"column:sort;type:int;not null;comment:字典排序" json:"sort"`                                          // 字典排序
 	Label     string         `gorm:"column:label;type:varchar(100);not null;comment:字典标签" json:"label"`                               // 字典标签
 	Value     string         `gorm:"column:value;type:varchar(100);not null;comment:字典键值" json:"value"`                               // 字典键值
 	DictType  string         `gorm:"column:dict_type;type:varchar(100);not null;comment:字典类型" json:"dict_type"`                       // 字典类型
-	Status    int32          `gorm:"column:status;type:tinyint(4);not null;comment:状态（0正常 1停用）" json:"status"`                        // 状态（0正常 1停用）
+	Status    int32          `gorm:"column:status;type:tinyint;not null;comment:状态（0正常 1停用）" json:"status"`                           // 状态（0正常 1停用）
 	ColorType *string        `gorm:"column:color_type;type:varchar(100);comment:颜色类型" json:"color_type"`                              // 颜色类型
 	CSSClass  *string        `gorm:"column:css_class;type:varchar(100);comment:css 样式" json:"css_class"`                              // css 样式
 	Remark    *string        `gorm:"column:remark;type:varchar(500);comment:备注" json:"remark"`                                        // 备注

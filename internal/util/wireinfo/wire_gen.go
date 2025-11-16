@@ -35,3 +35,30 @@ func InitializeHostController() *controller.HostController {
 	hostController := controller.NewHostController(hostService)
 	return hostController
 }
+
+// 初始化部门控制器
+func InitializeDeptController() *controller.DeptController {
+	gormDB := db.NewDB()
+	deptMapper := mapper.NewDeptMapper(gormDB)
+	deptService := service.NewDeptService(deptMapper)
+	deptController := controller.NewDeptController(deptService)
+	return deptController
+}
+
+// 初始化字典类型控制器
+func InitializeDictTypeController() *controller.DictTypeController {
+	gormDB := db.NewDB()
+	dtMapper := mapper.NewDictTypeMapper(gormDB)
+	dtService := service.NewDictTypeService(dtMapper)
+	dtController := controller.NewDictTypeController(dtService)
+	return dtController
+}
+
+// 初始化菜单控制器
+func InitializeMenuController() *controller.MenuController {
+	gormDB := db.NewDB()
+	mMapper := mapper.NewMenuMapper(gormDB)
+	mService := service.NewMenuService(mMapper)
+	mController := controller.NewMenuController(mService)
+	return mController
+}

@@ -14,14 +14,14 @@ const TableNameSystemDept = "system_dept"
 
 // SystemDept 部门表
 type SystemDept struct {
-	ID           int64          `gorm:"column:id;type:bigint(20);primaryKey;autoIncrement:true;comment:部门id" json:"id"`                  // 部门id
+	ID           int64          `gorm:"column:id;type:bigint;primaryKey;autoIncrement:true;comment:部门id" json:"id"`                      // 部门id
 	Name         string         `gorm:"column:name;type:varchar(30);not null;comment:部门名称" json:"name"`                                  // 部门名称
-	ParentID     int64          `gorm:"column:parent_id;type:bigint(20);not null;comment:父部门id" json:"parent_id"`                        // 父部门id
-	Sort         int32          `gorm:"column:sort;type:int(11);not null;comment:显示顺序" json:"sort"`                                      // 显示顺序
-	LeaderUserID *int64         `gorm:"column:leader_user_id;type:bigint(20);comment:负责人" json:"leader_user_id"`                         // 负责人
+	ParentID     int64          `gorm:"column:parent_id;type:bigint;not null;comment:父部门id" json:"parent_id"`                            // 父部门id
+	Sort         int32          `gorm:"column:sort;type:int;not null;comment:显示顺序" json:"sort"`                                          // 显示顺序
+	LeaderUserID *int64         `gorm:"column:leader_user_id;type:bigint;comment:负责人" json:"leader_user_id"`                             // 负责人
 	Phone        *string        `gorm:"column:phone;type:varchar(11);comment:联系电话" json:"phone"`                                         // 联系电话
 	Email        *string        `gorm:"column:email;type:varchar(50);comment:邮箱" json:"email"`                                           // 邮箱
-	Status       int32          `gorm:"column:status;type:tinyint(4);not null;comment:部门状态（0正常 1停用）" json:"status"`                      // 部门状态（0正常 1停用）
+	Status       int32          `gorm:"column:status;type:tinyint;not null;comment:部门状态（0正常 1停用）" json:"status"`                         // 部门状态（0正常 1停用）
 	Creator      *string        `gorm:"column:creator;type:varchar(64);comment:创建者" json:"creator"`                                      // 创建者
 	CreateAt     time.Time      `gorm:"column:create_at;type:datetime;not null;default:CURRENT_TIMESTAMP;comment:创建时间" json:"create_at"` // 创建时间
 	Updater      *string        `gorm:"column:updater;type:varchar(64);comment:更新者" json:"updater"`                                      // 更新者
