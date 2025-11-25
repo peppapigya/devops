@@ -3,11 +3,34 @@ package main
 import (
 	"k8s-platform-go/internal/config"
 	"log"
+	"strings"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gen"
 	"gorm.io/gorm"
 )
+
+func toCamelCase(str string) string {
+	if str == "" {
+		return ""
+	}
+
+	str = strings.Trim(str, "_")
+	parts := strings.Split(str, "_")
+
+	for i := 0; i < len(parts); i++ {
+		if parts[i] == "" {
+			continue
+		}
+		if i == 0 {
+			parts[i] = strings.ToLower(parts[i][:1]) + parts[i][1:]
+		} else {
+			parts[i] = strings.ToUpper(parts[i][:1]) + parts[i][1:]
+		}
+	}
+
+	return strings.Join(parts, "")
+}
 
 func main() {
 	// 加载配置文件
@@ -31,11 +54,13 @@ func main() {
 		FieldSignable:     true, // 当字段为数字类型时，生成带符号的指针
 		FieldWithIndexTag: true, // 生成索引标签
 		FieldWithTypeTag:  true, // 生成类型标签
+
 	})
 	// 设置数据库
 	g.UseDB(db)
-	// 生成所有的表
+	g.WithJSONTagNameStrategy(toCamelCase)
 
+	// 生成所有的表
 	g.ApplyBasic(g.GenerateAllTable()...)
 	// 执行代码生成
 	g.Execute()

@@ -14,16 +14,16 @@ const TableNameHost = "hosts"
 
 // Host mapped from table <hosts>
 type Host struct {
-	ID           uint32         `gorm:"column:id;type:int unsigned;primaryKey;autoIncrement:true;comment:主键id" json:"id"`                  // 主键id
-	HostName     string         `gorm:"column:host_name;type:varchar(255);not null;comment:名称" json:"host_name"`                           // 名称
-	Address      string         `gorm:"column:address;type:varchar(255);not null;comment:ip地址" json:"address"`                             // ip地址
-	HostPort     int32          `gorm:"column:host_port;type:int;not null;default:22;comment:端口" json:"host_port"`                         // 端口
-	Username     string         `gorm:"column:username;type:varchar(255);not null;comment:用户名" json:"username"`                            // 用户名
-	HostPassword *string        `gorm:"column:host_password;type:varchar(255);comment:密码" json:"host_password"`                            // 密码
-	CreatedAt    time.Time      `gorm:"column:created_at;type:datetime;not null;default:CURRENT_TIMESTAMP;comment:创建时间" json:"created_at"` // 创建时间
-	UpdatedAt    time.Time      `gorm:"column:updated_at;type:datetime;not null;default:CURRENT_TIMESTAMP;comment:更新时间" json:"updated_at"` // 更新时间
-	DeletedAt    gorm.DeletedAt `gorm:"column:deleted_at;type:datetime;comment:删除时间" json:"deleted_at"`                                    // 删除时间
-	Remark       *string        `gorm:"column:remark;type:varchar(500);comment:备注" json:"remark"`                                          // 备注
+	ID           uint32         `gorm:"column:id;type:int unsigned;primaryKey;autoIncrement:true;comment:主键id" json:"id"`                 // 主键id
+	HostName     string         `gorm:"column:host_name;type:varchar(255);not null;comment:名称" json:"hostName"`                           // 名称
+	Address      string         `gorm:"column:address;type:varchar(255);not null;comment:ip地址" json:"address"`                            // ip地址
+	HostPort     int32          `gorm:"column:host_port;type:int;not null;default:22;comment:端口" json:"hostPort"`                         // 端口
+	Username     string         `gorm:"column:username;type:varchar(255);not null;comment:用户名" json:"username"`                           // 用户名
+	HostPassword *string        `gorm:"column:host_password;type:varchar(255);comment:密码" json:"hostPassword"`                            // 密码
+	CreatedAt    time.Time      `gorm:"column:created_at;type:datetime;not null;default:CURRENT_TIMESTAMP;comment:创建时间" json:"createdAt"` // 创建时间
+	UpdatedAt    time.Time      `gorm:"column:updated_at;type:datetime;not null;default:CURRENT_TIMESTAMP;comment:更新时间" json:"updatedAt"` // 更新时间
+	DeletedAt    gorm.DeletedAt `gorm:"column:deleted_at;type:datetime;comment:删除时间" json:"deletedAt"`                                    // 删除时间
+	Remark       *string        `gorm:"column:remark;type:varchar(500);comment:备注" json:"remark"`                                         // 备注
 }
 
 // TableName Host's table name

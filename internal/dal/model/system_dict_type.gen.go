@@ -14,16 +14,16 @@ const TableNameSystemDictType = "system_dict_type"
 
 // SystemDictType 字典类型表
 type SystemDictType struct {
-	ID        int64          `gorm:"column:id;type:bigint;primaryKey;autoIncrement:true;comment:字典主键" json:"id"`                      // 字典主键
-	Name      string         `gorm:"column:name;type:varchar(100);not null;comment:字典名称" json:"name"`                                 // 字典名称
-	Type      string         `gorm:"column:type;type:varchar(100);not null;comment:字典类型" json:"type"`                                 // 字典类型
-	Status    int32          `gorm:"column:status;type:tinyint;not null;comment:状态（0正常 1停用）" json:"status"`                           // 状态（0正常 1停用）
-	Remark    *string        `gorm:"column:remark;type:varchar(500);comment:备注" json:"remark"`                                        // 备注
-	Creator   *string        `gorm:"column:creator;type:varchar(64);comment:创建者" json:"creator"`                                      // 创建者
-	CreateAt  time.Time      `gorm:"column:create_at;type:datetime;not null;default:CURRENT_TIMESTAMP;comment:创建时间" json:"create_at"` // 创建时间
-	Updater   *string        `gorm:"column:updater;type:varchar(64);comment:更新者" json:"updater"`                                      // 更新者
-	UpdateAt  time.Time      `gorm:"column:update_at;type:datetime;not null;default:CURRENT_TIMESTAMP;comment:更新时间" json:"update_at"` // 更新时间
-	DeletedAt gorm.DeletedAt `gorm:"column:deleted_at;type:datetime;comment:删除字段" json:"deleted_at"`                                  // 删除字段
+	ID        int64          `gorm:"column:id;type:bigint;primaryKey;autoIncrement:true;comment:字典主键" json:"id"`                     // 字典主键
+	Name      string         `gorm:"column:name;type:varchar(100);not null;comment:字典名称" json:"name"`                                // 字典名称
+	Type      string         `gorm:"column:type;type:varchar(100);not null;comment:字典类型" json:"type"`                                // 字典类型
+	Status    int32          `gorm:"column:status;type:tinyint;not null;comment:状态（0正常 1停用）" json:"status"`                          // 状态（0正常 1停用）
+	Remark    *string        `gorm:"column:remark;type:varchar(500);comment:备注" json:"remark"`                                       // 备注
+	Creator   *string        `gorm:"column:creator;type:varchar(64);comment:创建者" json:"creator"`                                     // 创建者
+	CreateAt  time.Time      `gorm:"column:create_at;type:datetime;not null;default:CURRENT_TIMESTAMP;comment:创建时间" json:"createAt"` // 创建时间
+	Updater   *string        `gorm:"column:updater;type:varchar(64);comment:更新者" json:"updater"`                                     // 更新者
+	UpdateAt  time.Time      `gorm:"column:update_at;type:datetime;not null;default:CURRENT_TIMESTAMP;comment:更新时间" json:"updateAt"` // 更新时间
+	DeletedAt gorm.DeletedAt `gorm:"column:deleted_at;type:datetime;comment:删除字段" json:"deletedAt"`                                  // 删除字段
 }
 
 // TableName SystemDictType's table name
