@@ -320,7 +320,6 @@ func boolPtr(b bool) []uint8 {
 	return []uint8{0}
 }
 
-// 辅助方法
 func getStr(s *string) string {
 	if s == nil {
 		return ""
@@ -376,9 +375,21 @@ func (s *MenuService) buildMenuTree(menus []*model.SystemMenu, parentID int64) [
 			}
 
 			node := &dto.MenuTreeVO{
-				ID:       menu.ID,
-				Name:     menu.Name,
-				Label:    menu.Name, // 复制name到label字段，供前端使用
+				ID:            menu.ID,
+				Name:          menu.Name,
+				Type:          menu.Type,
+				Sort:          menu.Sort,
+				Permission:    menu.Permission,
+				Path:          menu.Path,
+				Icon:          menu.Icon,
+				Component:     menu.Component,
+				ComponentName: menu.ComponentName,
+				Visible:       menu.Visible,
+				KeepAlive:     menu.KeepAlive,
+				AlwaysShow:    menu.AlwaysShow,
+				Status:        menu.Status,
+				// 复制name到label字段，供前端使用
+				Label:    menu.Name,
 				ParentID: menu.ParentID,
 			}
 
