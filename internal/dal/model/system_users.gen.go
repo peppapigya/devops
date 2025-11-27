@@ -16,7 +16,7 @@ const TableNameSystemUser = "system_users"
 type SystemUser struct {
 	ID        int64          `gorm:"column:id;type:bigint;primaryKey;autoIncrement:true;comment:用户ID" json:"id"`                     // 用户ID
 	Username  string         `gorm:"column:username;type:varchar(30);not null;comment:用户账号" json:"username"`                         // 用户账号
-	Password  string         `gorm:"column:password;type:varchar(100);not null;comment:密码" json:"password"`                          // 密码
+	Password  string         `gorm:"column:password;type:varchar(100);not null;comment:密码" json:"-"`                                 // 密码
 	Nickname  string         `gorm:"column:nickname;type:varchar(30);not null;comment:用户昵称" json:"nickname"`                         // 用户昵称
 	Remark    *string        `gorm:"column:remark;type:varchar(500);comment:备注" json:"remark"`                                       // 备注
 	DeptID    *int64         `gorm:"column:dept_id;type:bigint;comment:部门ID" json:"deptId"`                                          // 部门ID
