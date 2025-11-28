@@ -14,14 +14,14 @@ const TableNameSystemUserRole = "system_user_role"
 
 // SystemUserRole 用户和角色关联表
 type SystemUserRole struct {
-	ID        int64          `gorm:"column:id;type:bigint(20);primaryKey;autoIncrement:true;comment:自增编号" json:"id"`         // 自增编号
-	UserID    int64          `gorm:"column:user_id;type:bigint(20);not null;comment:用户ID" json:"user_id"`                    // 用户ID
-	RoleID    int64          `gorm:"column:role_id;type:bigint(20);not null;comment:角色ID" json:"role_id"`                    // 角色ID
-	Creator   *string        `gorm:"column:creator;type:varchar(64);comment:创建者" json:"creator"`                             // 创建者
-	CreateAt  *time.Time     `gorm:"column:create_at;type:datetime;default:CURRENT_TIMESTAMP;comment:创建时间" json:"create_at"` // 创建时间
-	Updater   *string        `gorm:"column:updater;type:varchar(64);comment:更新者" json:"updater"`                             // 更新者
-	UpdateAt  *time.Time     `gorm:"column:update_at;type:datetime;default:CURRENT_TIMESTAMP;comment:更新时间" json:"update_at"` // 更新时间
-	DeletedAt gorm.DeletedAt `gorm:"column:deleted_at;type:datetime;comment:删除时间" json:"deleted_at"`                         // 删除时间
+	ID        int64          `gorm:"column:id;type:bigint;primaryKey;autoIncrement:true;comment:自增编号" json:"id"`            // 自增编号
+	UserID    int64          `gorm:"column:user_id;type:bigint;not null;comment:用户ID" json:"userId"`                        // 用户ID
+	RoleID    int64          `gorm:"column:role_id;type:bigint;not null;comment:角色ID" json:"roleId"`                        // 角色ID
+	Creator   *string        `gorm:"column:creator;type:varchar(64);comment:创建者" json:"creator"`                            // 创建者
+	CreateAt  *time.Time     `gorm:"column:create_at;type:datetime;default:CURRENT_TIMESTAMP;comment:创建时间" json:"createAt"` // 创建时间
+	Updater   *string        `gorm:"column:updater;type:varchar(64);comment:更新者" json:"updater"`                            // 更新者
+	UpdateAt  *time.Time     `gorm:"column:update_at;type:datetime;default:CURRENT_TIMESTAMP;comment:更新时间" json:"updateAt"` // 更新时间
+	DeletedAt gorm.DeletedAt `gorm:"column:deleted_at;type:datetime;comment:删除时间" json:"deletedAt"`                         // 删除时间
 }
 
 // TableName SystemUserRole's table name

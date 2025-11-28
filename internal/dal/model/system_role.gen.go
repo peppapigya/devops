@@ -14,20 +14,20 @@ const TableNameSystemRole = "system_role"
 
 // SystemRole 角色信息表
 type SystemRole struct {
-	ID               int64          `gorm:"column:id;type:bigint(20);primaryKey;autoIncrement:true;comment:角色ID" json:"id"`                                                // 角色ID
-	Name             string         `gorm:"column:name;type:varchar(30);not null;comment:角色名称" json:"name"`                                                                // 角色名称
-	Code             string         `gorm:"column:code;type:varchar(100);not null;comment:角色权限字符串" json:"code"`                                                            // 角色权限字符串
-	Sort             int32          `gorm:"column:sort;type:int(11);not null;comment:显示顺序" json:"sort"`                                                                    // 显示顺序
-	DataScope        int32          `gorm:"column:data_scope;type:tinyint(4);not null;default:1;comment:数据范围（1：全部数据权限 2：自定数据权限 3：本部门数据权限 4：本部门及以下数据权限）" json:"data_scope"` // 数据范围（1：全部数据权限 2：自定数据权限 3：本部门数据权限 4：本部门及以下数据权限）
-	DataScopeDeptIds string         `gorm:"column:data_scope_dept_ids;type:varchar(500);not null;comment:数据范围(指定部门数组)" json:"data_scope_dept_ids"`                         // 数据范围(指定部门数组)
-	Status           int32          `gorm:"column:status;type:tinyint(4);not null;comment:角色状态（0正常 1停用）" json:"status"`                                                    // 角色状态（0正常 1停用）
-	Type             int32          `gorm:"column:type;type:tinyint(4);not null;comment:角色类型" json:"type"`                                                                 // 角色类型
-	Remark           *string        `gorm:"column:remark;type:varchar(500);comment:备注" json:"remark"`                                                                      // 备注
-	Creator          *string        `gorm:"column:creator;type:varchar(64);comment:创建者" json:"creator"`                                                                    // 创建者
-	CreateAt         time.Time      `gorm:"column:create_at;type:datetime;not null;default:CURRENT_TIMESTAMP;comment:创建时间" json:"create_at"`                               // 创建时间
-	Updater          *string        `gorm:"column:updater;type:varchar(64);comment:更新者" json:"updater"`                                                                    // 更新者
-	UpdateAt         time.Time      `gorm:"column:update_at;type:datetime;not null;default:CURRENT_TIMESTAMP;comment:更新时间" json:"update_at"`                               // 更新时间
-	DeletedAt        gorm.DeletedAt `gorm:"column:deleted_at;type:datetime;comment:删除字段" json:"deleted_at"`                                                                // 删除字段
+	ID               int64          `gorm:"column:id;type:bigint;primaryKey;autoIncrement:true;comment:角色ID" json:"id"`                                                // 角色ID
+	Name             string         `gorm:"column:name;type:varchar(30);not null;comment:角色名称" json:"name"`                                                            // 角色名称
+	Code             string         `gorm:"column:code;type:varchar(100);not null;comment:角色权限字符串" json:"code"`                                                        // 角色权限字符串
+	Sort             int32          `gorm:"column:sort;type:int;not null;comment:显示顺序" json:"sort"`                                                                    // 显示顺序
+	DataScope        int32          `gorm:"column:data_scope;type:tinyint;not null;default:1;comment:数据范围（1：全部数据权限 2：自定数据权限 3：本部门数据权限 4：本部门及以下数据权限）" json:"dataScope"` // 数据范围（1：全部数据权限 2：自定数据权限 3：本部门数据权限 4：本部门及以下数据权限）
+	DataScopeDeptIds string         `gorm:"column:data_scope_dept_ids;type:varchar(500);not null;comment:数据范围(指定部门数组)" json:"dataScopeDeptIds"`                        // 数据范围(指定部门数组)
+	Status           int32          `gorm:"column:status;type:tinyint;not null;comment:角色状态（0正常 1停用）" json:"status"`                                                   // 角色状态（0正常 1停用）
+	Type             int32          `gorm:"column:type;type:tinyint;not null;comment:角色类型" json:"type"`                                                                // 角色类型
+	Remark           *string        `gorm:"column:remark;type:varchar(500);comment:备注" json:"remark"`                                                                  // 备注
+	Creator          *string        `gorm:"column:creator;type:varchar(64);comment:创建者" json:"creator"`                                                                // 创建者
+	CreateAt         time.Time      `gorm:"column:create_at;type:datetime;not null;default:CURRENT_TIMESTAMP;comment:创建时间" json:"createAt"`                            // 创建时间
+	Updater          *string        `gorm:"column:updater;type:varchar(64);comment:更新者" json:"updater"`                                                                // 更新者
+	UpdateAt         time.Time      `gorm:"column:update_at;type:datetime;not null;default:CURRENT_TIMESTAMP;comment:更新时间" json:"updateAt"`                            // 更新时间
+	DeletedAt        gorm.DeletedAt `gorm:"column:deleted_at;type:datetime;comment:删除字段" json:"deletedAt"`                                                             // 删除字段
 }
 
 // TableName SystemRole's table name

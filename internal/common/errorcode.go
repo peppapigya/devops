@@ -26,6 +26,16 @@ var (
 	// =======================  主机相关 ========================
 	HostNotExist    = NewErrorCode(20001, "主机不存在")
 	HostUnreachable = NewErrorCode(20002, "主机不可达")
+
+	// =======================  菜单相关 ========================
+	MenuNotExist = NewErrorCode(30001, "菜单不存在")
+	MenuExist    = NewErrorCode(30002, "菜单已存在")
+	// 校验菜单名称失败
+	MenuNameCheckFailed = NewErrorCode(30003, "校验菜单名称失败")
+	// 菜单名称在该父菜单下已存在
+	MenuNameExist = NewErrorCode(30004, "菜单名称在该父菜单下已存在")
+	// 该菜单下存在子菜单，不能删除
+	MenuHasChildren = NewErrorCode(30005, "该菜单下存在子菜单，不能删除")
 )
 
 // NewErrorCode 创建错误码，方便后续业务调用
