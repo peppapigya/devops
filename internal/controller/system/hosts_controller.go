@@ -1,6 +1,6 @@
 // internal/controller/host_controller.go
 
-package controller
+package system
 
 import (
 	"k8s-platform-go/internal/common"

@@ -10,11 +10,11 @@ type MenuCreateDTO struct {
 	Permission    string  `json:"permission" binding:"required,min=1,max=100" label:"权限标识"`
 	Type          int32   `json:"type" binding:"required,oneof=1 2 3" label:"菜单类型"` // 1:目录 2:菜单 3:按钮
 	Sort          int32   `json:"sort" binding:"required,min=0" label:"显示顺序"`
-	ParentID      int64   `json:"parentId" binding:"required,min=0" label:"父菜单ID"`
+	ParentID      int64   `json:"parentId" binding:"min=0" label:"父菜单ID"`
 	Path          *string `json:"path" binding:"max=200" label:"路由地址"`
 	Icon          *string `json:"icon" binding:"max=100" label:"菜单图标"`
-	Component     *string `json:"component" binding:"max=255" label:"组件路径"`
-	ComponentName *string `json:"componentName" binding:"max=255" label:"组件名"`
+	Component     *string `json:"component" label:"组件路径"`
+	ComponentName *string `json:"componentName" label:"组件名"`
 	Visible       bool    `json:"visible" label:"是否可见"`
 	KeepAlive     bool    `json:"keepAlive" label:"是否缓存"`
 	AlwaysShow    bool    `json:"always_show" label:"是否总是显示"`
@@ -30,7 +30,7 @@ type MenuUpdateDTO struct {
 	ParentID      int64   `json:"parentId" label:"父菜单ID"`
 	Path          *string `json:"path" binding:"max=200" label:"路由地址"`
 	Icon          *string `json:"icon" binding:"max=100" label:"菜单图标"`
-	Component     *string `json:"component" binding:"max=255" label:"组件路径"`
+	Component     *string `json:"component" label:"组件路径"`
 	ComponentName *string `json:"componentName" label:"组件名"`
 	Visible       bool    `json:"visible" label:"是否可见"`
 	KeepAlive     bool    `json:"keepAlive" label:"是否缓存"`

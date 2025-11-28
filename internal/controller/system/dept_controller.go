@@ -1,4 +1,4 @@
-package controller
+package system
 
 import (
 	"k8s-platform-go/internal/common"
@@ -10,21 +10,22 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type DictTypeController struct{ s *service.DictTypeService }
+type DeptController struct{ svc *service.DeptService }
 
-func NewDictTypeController(s *service.DictTypeService) *DictTypeController {
-	return &DictTypeController{s: s}
-}
+func NewDeptController(s *service.DeptService) *DeptController { return &DeptController{svc: s} }
 
-func (ctl *DictTypeController) Page(c *gin.Context) {
-	var req dto.DictTypePageRequest
+func (ctl *DeptController) Page(c *gin.Context) {
+	var req dto.DeptPageRequest
 	if ok := util.BindAndValidate(c, &req); !ok {
 		log.Printf("参数解析失败或验证失败\n")
 		return
 	}
-	ctl.s.Page(c, req)
+	ctl.svc.Page(c, req)
 }
-func (ctl *DictTypeController) Detail(c *gin.Context) {
+
+func (ctl *DeptController) Tree(c *gin.Context) { ctl.svc.Tree(c) }
+
+func (ctl *DeptController) Detail(c *gin.Context) {
 	var id int64
 	util.GetParam(c, "id", &id, func(param interface{}) {
 		if id <= 0 {
@@ -36,25 +37,28 @@ func (ctl *DictTypeController) Detail(c *gin.Context) {
 	if c.IsAborted() {
 		return
 	}
-	ctl.s.Detail(c, id)
+	ctl.svc.Detail(c, id)
 }
-func (ctl *DictTypeController) Create(c *gin.Context) {
-	var req dto.DictTypeSaveRequest
+
+func (ctl *DeptController) Create(c *gin.Context) {
+	var req dto.DeptSaveRequest
 	if ok := util.BindAndValidate(c, &req); !ok {
 		common.Fail(c, common.BadRequest)
 		return
 	}
-	ctl.s.Create(c, req)
+	ctl.svc.Create(c, req)
 }
-func (ctl *DictTypeController) Update(c *gin.Context) {
-	var req dto.DictTypeSaveRequest
+
+func (ctl *DeptController) Update(c *gin.Context) {
+	var req dto.DeptSaveRequest
 	if ok := util.BindAndValidate(c, &req); !ok {
 		common.Fail(c, common.BadRequest)
 		return
 	}
-	ctl.s.Update(c, req)
+	ctl.svc.Update(c, req)
 }
-func (ctl *DictTypeController) Remove(c *gin.Context) {
+
+func (ctl *DeptController) Remove(c *gin.Context) {
 	var id int64
 	util.GetParam(c, "id", &id, func(param interface{}) {
 		if id <= 0 {
@@ -66,9 +70,10 @@ func (ctl *DictTypeController) Remove(c *gin.Context) {
 	if c.IsAborted() {
 		return
 	}
-	ctl.s.Remove(c, id)
+	ctl.svc.Remove(c, id)
 }
-func (ctl *DictTypeController) UpdateStatus(c *gin.Context) {
+
+func (ctl *DeptController) UpdateStatus(c *gin.Context) {
 	var id int64
 	util.GetParam(c, "id", &id, func(param interface{}) {
 		if id <= 0 {
@@ -82,5 +87,5 @@ func (ctl *DictTypeController) UpdateStatus(c *gin.Context) {
 	if c.IsAborted() {
 		return
 	}
-	ctl.s.UpdateStatus(c, id, status)
+	ctl.svc.UpdateStatus(c, id, status)
 }

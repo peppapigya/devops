@@ -8,7 +8,7 @@ package wireinfo
 
 import (
 	"k8s-platform-go/internal/config/db"
-	"k8s-platform-go/internal/controller"
+	"k8s-platform-go/internal/controller/system"
 	"k8s-platform-go/internal/dal/redis"
 	"k8s-platform-go/internal/mapper"
 	"k8s-platform-go/internal/service"
@@ -17,48 +17,48 @@ import (
 // Injectors from wire.go:
 
 // 初始化用户控制器
-func InitializeUserController() *controller.UserController {
+func InitializeUserController() *system.UserController {
 	gormDB := db.NewDB()
 	userMapper := mapper.NewUserMapper(gormDB)
 	client := db.InitRedis()
 	redisClient := redis.NewClient(client)
 	userService := service.NewUserService(userMapper, redisClient)
-	userController := controller.NewUserController(userService)
+	userController := system.NewUserController(userService)
 	return userController
 }
 
 // 初始化主机控制器
-func InitializeHostController() *controller.HostController {
+func InitializeHostController() *system.HostController {
 	gormDB := db.NewDB()
 	hostMapper := mapper.NewHostMapper(gormDB)
 	hostService := service.NewHostService(hostMapper)
-	hostController := controller.NewHostController(hostService)
+	hostController := system.NewHostController(hostService)
 	return hostController
 }
 
 // 初始化部门控制器
-func InitializeDeptController() *controller.DeptController {
+func InitializeDeptController() *system.DeptController {
 	gormDB := db.NewDB()
 	deptMapper := mapper.NewDeptMapper(gormDB)
 	deptService := service.NewDeptService(deptMapper)
-	deptController := controller.NewDeptController(deptService)
+	deptController := system.NewDeptController(deptService)
 	return deptController
 }
 
 // 初始化字典类型控制器
-func InitializeDictTypeController() *controller.DictTypeController {
+func InitializeDictTypeController() *system.DictTypeController {
 	gormDB := db.NewDB()
 	dtMapper := mapper.NewDictTypeMapper(gormDB)
 	dtService := service.NewDictTypeService(dtMapper)
-	dtController := controller.NewDictTypeController(dtService)
+	dtController := system.NewDictTypeController(dtService)
 	return dtController
 }
 
 // 初始化菜单控制器
-func InitializeMenuController() *controller.MenuController {
+func InitializeMenuController() *system.MenuController {
 	gormDB := db.NewDB()
 	mMapper := mapper.NewMenuMapper(gormDB)
 	mService := service.NewMenuService(mMapper)
-	mController := controller.NewMenuController(mService)
+	mController := system.NewMenuController(mService)
 	return mController
 }
