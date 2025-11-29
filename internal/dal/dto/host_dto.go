@@ -238,3 +238,10 @@ type SummaryInfo struct {
 	Alerts          []string `json:"alerts"`
 	Recommendations []string `json:"recommendations"`
 }
+
+// HostsSelectInfo 下拉框结构体
+type HostsSelectInfo struct {
+	Id    int    `json:"id"`
+	Label string `json:"label"`
+	Value string `json:"value"`
+}

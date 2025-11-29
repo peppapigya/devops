@@ -21,6 +21,21 @@ func BindAndValidate(c *gin.Context, obj interface{}) bool {
 		var errs validator.ValidationErrors
 		if ok := errors.As(err, &errs); ok {
 			log.Printf("参数校验失败: %v", errs)
+			common.Fail(c, common.NewErrorCode(400, errs[0].Translate(common.GetTranslator())))
+			return false
+		}
+		log.Printf("解析参数失败: %v", err)
+		common.Fail(c, common.ServerError)
+		return false
+	}
+	return true
+}
+
+func BindQueryParam(c *gin.Context, obj interface{}) bool {
+	if err := c.ShouldBindQuery(obj); err != nil {
+		var errs validator.ValidationErrors
+		if ok := errors.As(err, &errs); ok {
+			log.Printf("参数校验失败: %v", errs)
 			common.FailWithMsg(c, errs[0].Translate(trans))
 			return false
 		}

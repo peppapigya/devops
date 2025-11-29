@@ -14,7 +14,7 @@ const TableNameSystemUser = "system_users"
 
 // SystemUser 用户信息表
 type SystemUser struct {
-	ID        int64          `gorm:"column:id;type:bigint;primaryKey;autoIncrement:true;comment:用户ID" json:"id"`                     // 用户ID
+	ID        int64          `gorm:"column:id;type:bigint(20);primaryKey;autoIncrement:true;comment:用户ID" json:"id"`                 // 用户ID
 	Username  string         `gorm:"column:username;type:varchar(30);not null;comment:用户账号" json:"username"`                         // 用户账号
 	Password  string         `gorm:"column:password;type:varchar(100);not null;comment:密码" json:"-"`                                 // 密码
 	Nickname  string         `gorm:"column:nickname;type:varchar(30);not null;comment:用户昵称" json:"nickname"`                         // 用户昵称
@@ -23,9 +23,9 @@ type SystemUser struct {
 	PostIds   *string        `gorm:"column:post_ids;type:varchar(255);comment:岗位编号数组" json:"postIds"`                                // 岗位编号数组
 	Email     *string        `gorm:"column:email;type:varchar(50);comment:用户邮箱" json:"email"`                                        // 用户邮箱
 	Mobile    *string        `gorm:"column:mobile;type:varchar(11);comment:手机号码" json:"mobile"`                                      // 手机号码
-	Sex       *int32         `gorm:"column:sex;type:tinyint;comment:用户性别" json:"sex"`                                                // 用户性别
+	Sex       *int32         `gorm:"column:sex;type:tinyint(4);comment:用户性别" json:"sex"`                                             // 用户性别
 	Avatar    *string        `gorm:"column:avatar;type:varchar(512);comment:头像地址" json:"avatar"`                                     // 头像地址
-	Status    int32          `gorm:"column:status;type:tinyint;not null;comment:帐号状态（0正常 1停用）" json:"status"`                        // 帐号状态（0正常 1停用）
+	Status    int32          `gorm:"column:status;type:tinyint(4);not null;comment:帐号状态（0正常 1停用）" json:"status"`                     // 帐号状态（0正常 1停用）
 	LoginIP   *string        `gorm:"column:login_ip;type:varchar(50);comment:最后登录IP" json:"loginIp"`                                 // 最后登录IP
 	LoginDate *time.Time     `gorm:"column:login_date;type:datetime;comment:最后登录时间" json:"loginDate"`                                // 最后登录时间
 	Creator   *string        `gorm:"column:creator;type:varchar(64);comment:创建者" json:"creator"`                                     // 创建者

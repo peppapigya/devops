@@ -5,6 +5,7 @@ package wireinfo
 
 import (
 	"k8s-platform-go/internal/config/db"
+	"k8s-platform-go/internal/controller/job"
 	"k8s-platform-go/internal/controller/system"
 	"k8s-platform-go/internal/dal/redis"
 	"k8s-platform-go/internal/mapper"
@@ -41,4 +42,28 @@ func InitializeDictTypeController() *system.DictTypeController {
 func InitializeMenuController() *system.MenuController {
 	wire.Build(db.NewDB, mapper.NewMenuMapper, service.NewMenuService, system.NewMenuController)
 	return &system.MenuController{}
+}
+
+// 初始化作业脚本控制器
+func InitializeJobScriptController() *job.JobScriptController {
+	wire.Build(db.NewDB, mapper.NewJobScriptMapper, service.NewJobScriptService, job.NewJobScriptController)
+	return &job.JobScriptController{}
+}
+
+// 初始化作业计划控制器
+func InitializeJobPlanController() *job.JobPlanController {
+	wire.Build(db.NewDB, mapper.NewJobPlanMapper, mapper.NewJobPlanScriptMapper, service.NewJobPlanService, job.NewJobPlanController)
+	return &job.JobPlanController{}
+}
+
+// 初始化定时任务控制器
+func InitializeJobScheduledTaskController() *job.JobScheduledTaskController {
+	wire.Build(db.NewDB, mapper.NewJobScheduledTaskMapper, service.NewJobScheduledTaskService, job.NewJobScheduledTaskController)
+	return &job.JobScheduledTaskController{}
+}
+
+// 初始化作业日志控制器
+func InitializeJobPlanLogController() *job.JobPlanLogController {
+	wire.Build(db.NewDB, mapper.NewJobPlanLogMapper, service.NewJobPlanLogService, job.NewJobPlanLogController)
+	return &job.JobPlanLogController{}
 }

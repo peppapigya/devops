@@ -16,5 +16,6 @@ func InitRouter(r *gin.Engine) {
 		InitDeptRouter(api)
 		InitDictTypeRouter(api)
 		InitMenuRouter(api)
+		InitJobRouter(api)
 	}
 }

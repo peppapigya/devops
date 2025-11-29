@@ -54,7 +54,7 @@ func RequestLogHandler() gin.HandlerFunc {
 func Authenticate(excludePaths ...string) gin.HandlerFunc {
 	excludePathRegex := make([]*regexp.Regexp, 0)
 	for _, path := range excludePaths {
-		str := strings.ReplaceAll(path, "*", "*")
+		str := strings.ReplaceAll(path, "*", ".*")
 		excludePathRegex = append(excludePathRegex, regexp.MustCompile(str))
 	}
 	return func(c *gin.Context) {

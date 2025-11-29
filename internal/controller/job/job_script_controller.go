@@ -1,0 +1,98 @@
+package job
+
+import (
+	"k8s-platform-go/internal/common"
+	"k8s-platform-go/internal/dal/dto"
+	"k8s-platform-go/internal/service"
+	"k8s-platform-go/internal/util"
+	"log"
+
+	"github.com/gin-gonic/gin"
+)
+
+type JobScriptController struct {
+	jobScriptService *service.JobScriptService
+}
+
+func NewJobScriptController(jobScriptService *service.JobScriptService) *JobScriptController {
+	return &JobScriptController{
+		jobScriptService: jobScriptService,
+	}
+}
+
+// @Tags 作业脚本管理
+// @Summary 创建脚本
+// @Param request body dto.JobScriptSaveRequest true "请求参数"
+// @Router /jobs/script/create [post]
+func (ctrl *JobScriptController) CreateJobScript(c *gin.Context) {
+	var req dto.JobScriptSaveRequest
+	if ok := util.BindAndValidate(c, &req); !ok {
+		log.Printf("参数解析失败或验证失败\n")
+		return
+	}
+	ctrl.jobScriptService.CreateJobScript(c, req)
+}
+
+// @Tags 作业脚本管理
+// @Summary 更新脚本
+// @Param request body dto.JobScriptSaveRequest true "请求参数"
+// @Router /jobs/script/update [post]
+func (ctrl *JobScriptController) UpdateJobScript(c *gin.Context) {
+	var req dto.JobScriptSaveRequest
+	if ok := util.BindAndValidate(c, &req); !ok {
+		log.Printf("参数解析失败或验证失败\n")
+		return
+	}
+	ctrl.jobScriptService.UpdateJobScript(c, req)
+}
+
+// @Tags 作业脚本管理
+// @Summary 删除脚本
+// @Param id path int true "脚本ID"
+// @Router /jobs/script/delete [delete]
+func (ctrl *JobScriptController) DeleteJobScript(c *gin.Context) {
+	var id int64
+	util.GetParam(c, "id", &id, func(param interface{}) {
+		if id <= 0 {
+			common.Fail(c, common.BadRequest)
+			c.Abort()
+			return
+		}
+	})
+	if c.IsAborted() {
+		return
+	}
+	ctrl.jobScriptService.DeleteJobScript(c, id)
+}
+
+// @Tags 作业脚本管理
+// @Summary 获取脚本分页
+// @Param request body dto.JobScriptPageRequest true "请求参数"
+// @Router /jobs/script/page [post]
+func (ctrl *JobScriptController) GetJobScriptPage(c *gin.Context) {
+	var req dto.JobScriptPageRequest
+	if ok := util.BindQueryParam(c, &req); !ok {
+		log.Printf("参数解析失败或验证失败\n")
+		return
+	}
+	ctrl.jobScriptService.GetJobScriptPage(c, req)
+}
+
+// @Tags 作业脚本管理
+// @Summary 获取脚本详情
+// @Param id path int true "脚本ID"
+// @Router /jobs/script/detail [get]
+func (ctrl *JobScriptController) GetJobScriptById(c *gin.Context) {
+	var id int64
+	util.GetParam(c, "id", &id, func(param interface{}) {
+		if id <= 0 {
+			common.Fail(c, common.BadRequest)
+			c.Abort()
+			return
+		}
+	})
+	if c.IsAborted() {
+		return
+	}
+	ctrl.jobScriptService.GetJobScriptById(c, id)
+}

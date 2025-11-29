@@ -1,6 +1,6 @@
 package k8s_platform_go
 
-//// README: K8s 无限集群管理平台 - Go 语言骨架（示例）
+//// README.md: K8s 无限集群管理平台 - Go 语言骨架（示例）
 //// 技术栈：Go 1.21, Gin, GORM, client-go
 //// 目录结构示例：
 ////  - cmd/server/main.go

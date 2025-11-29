@@ -8,6 +8,7 @@ import (
 	"k8s-platform-go/internal/mapper"
 	"k8s-platform-go/internal/util"
 	"log"
+	"strconv"
 	"sync"
 	"time"
 
@@ -141,6 +142,24 @@ func (hostService *HostService) InspectHost(id int) (interface{}, *common.ErrorC
 		return nil, common.NewErrorCode(500, err.Error())
 	}
 	return info, nil
+}
+
+func (hostService *HostService) GetHostSelectList() ([]*dto.HostsSelectInfo, error) {
+	list, err := hostService.hostMapper.SelectHostSelectList()
+	if err != nil {
+		return nil, err
+	}
+	var hosts []*dto.HostsSelectInfo
+	// 转化为dto
+	hosts, _ = common.ConvertList(list, func(host *model.Host) *dto.HostsSelectInfo {
+		return &dto.HostsSelectInfo{
+			Id:    int(host.ID),
+			Label: host.HostName + "(" + host.Address + ")",
+			Value: strconv.Itoa(int(host.ID)),
+		}
+	})
+	return hosts, nil
+
 }
 
 func CheckHostInfo(hostInfo *util.HostInfo) (interface{}, error) {
