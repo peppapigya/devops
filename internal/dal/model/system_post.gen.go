@@ -14,11 +14,11 @@ const TableNameSystemPost = "system_post"
 
 // SystemPost 岗位信息表
 type SystemPost struct {
-	ID        int64          `gorm:"column:id;type:bigint;primaryKey;autoIncrement:true;comment:岗位ID" json:"id"`                     // 岗位ID
+	ID        int64          `gorm:"column:id;type:bigint(20);primaryKey;autoIncrement:true;comment:岗位ID" json:"id"`                 // 岗位ID
 	Code      string         `gorm:"column:code;type:varchar(64);not null;comment:岗位编码" json:"code"`                                 // 岗位编码
 	Name      string         `gorm:"column:name;type:varchar(50);not null;comment:岗位名称" json:"name"`                                 // 岗位名称
-	Sort      int32          `gorm:"column:sort;type:int;not null;comment:显示顺序" json:"sort"`                                         // 显示顺序
-	Status    int32          `gorm:"column:status;type:tinyint;not null;comment:状态（0正常 1停用）" json:"status"`                          // 状态（0正常 1停用）
+	Sort      int32          `gorm:"column:sort;type:int(11);not null;comment:显示顺序" json:"sort"`                                     // 显示顺序
+	Status    int32          `gorm:"column:status;type:tinyint(4);not null;comment:状态（0正常 1停用）" json:"status"`                       // 状态（0正常 1停用）
 	Remark    *string        `gorm:"column:remark;type:varchar(500);comment:备注" json:"remark"`                                       // 备注
 	Creator   *string        `gorm:"column:creator;type:varchar(64);comment:创建者" json:"creator"`                                     // 创建者
 	CreateAt  time.Time      `gorm:"column:create_at;type:datetime;not null;default:CURRENT_TIMESTAMP;comment:创建时间" json:"createAt"` // 创建时间

@@ -18,6 +18,11 @@ import (
 var (
 	Q                        = new(Query)
 	Host                     *host
+	JobPlan                  *jobPlan
+	JobPlanLog               *jobPlanLog
+	JobPlanScript            *jobPlanScript
+	JobScheduledTask         *jobScheduledTask
+	JobScript                *jobScript
 	SystemDept               *systemDept
 	SystemDictDatum          *systemDictDatum
 	SystemDictType           *systemDictType
@@ -37,6 +42,11 @@ var (
 func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	*Q = *Use(db, opts...)
 	Host = &Q.Host
+	JobPlan = &Q.JobPlan
+	JobPlanLog = &Q.JobPlanLog
+	JobPlanScript = &Q.JobPlanScript
+	JobScheduledTask = &Q.JobScheduledTask
+	JobScript = &Q.JobScript
 	SystemDept = &Q.SystemDept
 	SystemDictDatum = &Q.SystemDictDatum
 	SystemDictType = &Q.SystemDictType
@@ -57,6 +67,11 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 	return &Query{
 		db:                       db,
 		Host:                     newHost(db, opts...),
+		JobPlan:                  newJobPlan(db, opts...),
+		JobPlanLog:               newJobPlanLog(db, opts...),
+		JobPlanScript:            newJobPlanScript(db, opts...),
+		JobScheduledTask:         newJobScheduledTask(db, opts...),
+		JobScript:                newJobScript(db, opts...),
 		SystemDept:               newSystemDept(db, opts...),
 		SystemDictDatum:          newSystemDictDatum(db, opts...),
 		SystemDictType:           newSystemDictType(db, opts...),
@@ -78,6 +93,11 @@ type Query struct {
 	db *gorm.DB
 
 	Host                     host
+	JobPlan                  jobPlan
+	JobPlanLog               jobPlanLog
+	JobPlanScript            jobPlanScript
+	JobScheduledTask         jobScheduledTask
+	JobScript                jobScript
 	SystemDept               systemDept
 	SystemDictDatum          systemDictDatum
 	SystemDictType           systemDictType
@@ -100,6 +120,11 @@ func (q *Query) clone(db *gorm.DB) *Query {
 	return &Query{
 		db:                       db,
 		Host:                     q.Host.clone(db),
+		JobPlan:                  q.JobPlan.clone(db),
+		JobPlanLog:               q.JobPlanLog.clone(db),
+		JobPlanScript:            q.JobPlanScript.clone(db),
+		JobScheduledTask:         q.JobScheduledTask.clone(db),
+		JobScript:                q.JobScript.clone(db),
 		SystemDept:               q.SystemDept.clone(db),
 		SystemDictDatum:          q.SystemDictDatum.clone(db),
 		SystemDictType:           q.SystemDictType.clone(db),
@@ -129,6 +154,11 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 	return &Query{
 		db:                       db,
 		Host:                     q.Host.replaceDB(db),
+		JobPlan:                  q.JobPlan.replaceDB(db),
+		JobPlanLog:               q.JobPlanLog.replaceDB(db),
+		JobPlanScript:            q.JobPlanScript.replaceDB(db),
+		JobScheduledTask:         q.JobScheduledTask.replaceDB(db),
+		JobScript:                q.JobScript.replaceDB(db),
 		SystemDept:               q.SystemDept.replaceDB(db),
 		SystemDictDatum:          q.SystemDictDatum.replaceDB(db),
 		SystemDictType:           q.SystemDictType.replaceDB(db),
@@ -148,6 +178,11 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 
 type queryCtx struct {
 	Host                     IHostDo
+	JobPlan                  IJobPlanDo
+	JobPlanLog               IJobPlanLogDo
+	JobPlanScript            IJobPlanScriptDo
+	JobScheduledTask         IJobScheduledTaskDo
+	JobScript                IJobScriptDo
 	SystemDept               ISystemDeptDo
 	SystemDictDatum          ISystemDictDatumDo
 	SystemDictType           ISystemDictTypeDo
@@ -167,6 +202,11 @@ type queryCtx struct {
 func (q *Query) WithContext(ctx context.Context) *queryCtx {
 	return &queryCtx{
 		Host:                     q.Host.WithContext(ctx),
+		JobPlan:                  q.JobPlan.WithContext(ctx),
+		JobPlanLog:               q.JobPlanLog.WithContext(ctx),
+		JobPlanScript:            q.JobPlanScript.WithContext(ctx),
+		JobScheduledTask:         q.JobScheduledTask.WithContext(ctx),
+		JobScript:                q.JobScript.WithContext(ctx),
 		SystemDept:               q.SystemDept.WithContext(ctx),
 		SystemDictDatum:          q.SystemDictDatum.WithContext(ctx),
 		SystemDictType:           q.SystemDictType.WithContext(ctx),

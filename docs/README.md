@@ -1,0 +1,1 @@
+ 生成api文档命令： swag init  -g .\cmd\api\main.go

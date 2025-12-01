@@ -12,6 +12,7 @@ type GlobalConfig struct {
 	Server   *ServerConfig
 	Jwt      *JwtProperties
 	Redis    *RedisProperties
+	Job      *JobConfig `yaml:"job"`
 }
 
 // DatabaseDO 数据库配置
@@ -59,7 +60,7 @@ func LoadConfig() error {
 	}
 
 	if err := v.Unmarshal(&globalConfig); err != nil {
-		return fmt.Errorf("unmarshal error : %v\n", err)
+		return fmt.Errorf("unmarshal global config error : %v\n", err)
 	}
 	return nil
 }

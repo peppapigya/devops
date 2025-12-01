@@ -3,7 +3,8 @@ server:
   debug: true
 
 database:
-  dsn: "root:peppa-pig@tcp(39.103.56.192:8002)/k8s?charset=utf8mb4&parseTime=True&loc=Local"
+  #  dsn: "root:peppa-pig@tcp(39.103.56.192:8002)/k8s?charset=utf8mb4&parseTime=True&loc=Local"
+  dsn: "root:123456@tcp(127.0.0.1:3306)/k8s-devops?charset=utf8mb4&parseTime=True&loc=Local"
 
 redis:
   host: 39.103.56.192
@@ -20,5 +21,13 @@ jwt:
     - /api/v1/sysUser/refresh
     - /api/v1/sysUser/captcha
     - /swagger/*
+    - /jobs/script/
+job:
+  script:
+    #  脚本执全局超时时间,0表示没有限制
+    global-timeout: 60
+    # 最大并发数
+    max-concurrent: 10
+
 
 

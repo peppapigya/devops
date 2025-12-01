@@ -11,6 +11,7 @@ package main
 import (
 	"fmt"
 	_ "k8s-platform-go/docs"
+	"k8s-platform-go/internal/common"
 
 	"k8s-platform-go/internal/common/exception"
 	"k8s-platform-go/internal/common/middleware"
@@ -19,10 +20,10 @@ import (
 
 	"k8s-platform-go/internal/router"
 
-	"k8s-platform-go/internal/util"
 	"log"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 )
 
 func main() {
@@ -43,7 +44,7 @@ func main() {
 	defer db.CloseRedis()
 
 	r := gin.Default()
-	util.InitValidator()
+	binding.Validator = &common.DefaultValidator{}
 	// 设置中间件
 	setMiddleware(r, globalConfig)
 	// 设置全局路由

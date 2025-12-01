@@ -14,9 +14,9 @@ const TableNameSystemOauth2AccessToken = "system_oauth2_access_token"
 
 // SystemOauth2AccessToken OAuth2 访问令牌
 type SystemOauth2AccessToken struct {
-	ID           int64          `gorm:"column:id;type:bigint;primaryKey;autoIncrement:true;comment:编号" json:"id"`                                           // 编号
-	UserID       int64          `gorm:"column:user_id;type:bigint;not null;comment:用户编号" json:"userId"`                                                     // 用户编号
-	UserType     int32          `gorm:"column:user_type;type:tinyint;not null;comment:用户类型" json:"userType"`                                                // 用户类型
+	ID           int64          `gorm:"column:id;type:bigint(20);primaryKey;autoIncrement:true;comment:编号" json:"id"`                                       // 编号
+	UserID       int64          `gorm:"column:user_id;type:bigint(20);not null;comment:用户编号" json:"userId"`                                                 // 用户编号
+	UserType     int32          `gorm:"column:user_type;type:tinyint(4);not null;comment:用户类型" json:"userType"`                                             // 用户类型
 	UserInfo     string         `gorm:"column:user_info;type:varchar(512);not null;comment:用户信息" json:"userInfo"`                                           // 用户信息
 	AccessToken  string         `gorm:"column:access_token;type:varchar(255);not null;index:idx_access_token,priority:1;comment:访问令牌" json:"accessToken"`   // 访问令牌
 	RefreshToken string         `gorm:"column:refresh_token;type:varchar(32);not null;index:idx_refresh_token,priority:1;comment:刷新令牌" json:"refreshToken"` // 刷新令牌

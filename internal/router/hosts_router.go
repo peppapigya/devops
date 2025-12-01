@@ -16,5 +16,6 @@ func InitHostsRouter(rg *gin.RouterGroup) {
 		hostGroup.DELETE("/:id", hostController.DeleteHost)
 		hostGroup.POST("/:id/test", hostController.TestConnection)
 		hostGroup.POST("/:id/inspect", hostController.InspectHost)
+		hostGroup.GET("/select", hostController.GetHostSelectList)
 	}
 }

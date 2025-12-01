@@ -37,6 +37,10 @@ func Fail(c *gin.Context, code *ErrorCode) {
 	)
 }
 
+func FailWithError(c *gin.Context, err error) {
+	FailWithMsg(c, err.Error())
+}
+
 func FailWithMsg(c *gin.Context, msg string) {
 	c.JSON(
 		http.StatusOK,

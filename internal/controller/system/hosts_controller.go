@@ -96,12 +96,12 @@ func (hostController *HostController) TestConnection(c *gin.Context) {
 		c.Abort()
 		return
 	}
-	result, err := hostController.hostService.TestConnection(id)
+	Response, err := hostController.hostService.TestConnection(id)
 	if err != nil {
 		common.Fail(c, err)
 		return
 	}
-	c.String(200, result) // 返回纯文本结果
+	c.String(200, Response) // 返回纯文本结果
 }
 
 // @Tags 主机管理
@@ -117,10 +117,28 @@ func (hostController *HostController) InspectHost(c *gin.Context) {
 		return
 	}
 
-	result, err := hostController.hostService.InspectHost(id)
+	Response, err := hostController.hostService.InspectHost(id)
 	if err != nil {
 		common.Fail(c, err)
 		return
 	}
-	common.Success(c, result) // 返回JSON格式的结果
+	common.Success(c, Response) // 返回JSON格式的结果
+}
+
+// GetHostSelectList 获取主机下拉列表
+// @Tags 主机管理
+// @Summary 获取主机下拉列表
+// @Description 获取所有主机的下拉选项列表，用于前端选择框展示
+// @Accept json
+// @Produce json
+// @Success 200 {object} common.Response "成功返回主机下拉列表数据"
+// @Failure 500 {object} common.Response "业务处理失败"
+// @Router /hosts/select [get]
+func (hostController *HostController) GetHostSelectList(c *gin.Context) {
+	list, err := hostController.hostService.GetHostSelectList()
+	if err != nil {
+		common.BusinessFail(c, err.Error())
+		return
+	}
+	common.Success(c, list)
 }

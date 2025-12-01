@@ -58,3 +58,15 @@ func (hostMapper *HostMapper) InsertHost(host *model.Host) error {
 	err := hostMapper.query.Host.WithContext(context.Background()).Create(host)
 	return err
 }
+
+// SelectHostSelectList 获取主机下拉列表
+func (hostMapper *HostMapper) SelectHostSelectList() ([]*model.Host, error) {
+	host := hostMapper.query.Host
+	return hostMapper.query.Host.WithContext(context.Background()).Select(host.ID, host.HostName, host.Address).Find()
+}
+
+// SelectByIds 根据id列表查询主机信息
+func (hostMapper *HostMapper) SelectByIds(ids []uint32) ([]*model.Host, error) {
+	host := hostMapper.query.Host
+	return hostMapper.query.Host.Where(host.ID.In(ids...)).Find()
+}

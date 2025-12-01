@@ -8,10 +8,12 @@ package wireinfo
 
 import (
 	"k8s-platform-go/internal/config/db"
+	"k8s-platform-go/internal/controller/job"
 	"k8s-platform-go/internal/controller/system"
 	"k8s-platform-go/internal/dal/redis"
 	"k8s-platform-go/internal/mapper"
 	"k8s-platform-go/internal/service"
+	"k8s-platform-go/internal/strategy/script_executors"
 )
 
 // Injectors from wire.go:
@@ -48,17 +50,62 @@ func InitializeDeptController() *system.DeptController {
 // 初始化字典类型控制器
 func InitializeDictTypeController() *system.DictTypeController {
 	gormDB := db.NewDB()
-	dtMapper := mapper.NewDictTypeMapper(gormDB)
-	dtService := service.NewDictTypeService(dtMapper)
-	dtController := system.NewDictTypeController(dtService)
-	return dtController
+	dictTypeMapper := mapper.NewDictTypeMapper(gormDB)
+	dictTypeService := service.NewDictTypeService(dictTypeMapper)
+	dictTypeController := system.NewDictTypeController(dictTypeService)
+	return dictTypeController
 }
 
 // 初始化菜单控制器
 func InitializeMenuController() *system.MenuController {
 	gormDB := db.NewDB()
-	mMapper := mapper.NewMenuMapper(gormDB)
-	mService := service.NewMenuService(mMapper)
-	mController := system.NewMenuController(mService)
-	return mController
+	menuMapper := mapper.NewMenuMapper(gormDB)
+	menuService := service.NewMenuService(menuMapper)
+	menuController := system.NewMenuController(menuService)
+	return menuController
+}
+
+// 初始化作业脚本控制器
+func InitializeJobScriptController() *job.JobScriptController {
+	gormDB := db.NewDB()
+	jobScriptMapper := mapper.NewJobScriptMapper(gormDB)
+	jobScriptService := service.NewJobScriptService(jobScriptMapper)
+	jobScriptController := job.NewJobScriptController(jobScriptService)
+	return jobScriptController
+}
+
+// 初始化作业计划控制器
+func InitializeJobPlanController() *job.JobPlanController {
+	gormDB := db.NewDB()
+	jobPlanMapper := mapper.NewJobPlanMapper(gormDB)
+	jobPlanScriptMapper := mapper.NewJobPlanScriptMapper(gormDB)
+	jobPlanService := service.NewJobPlanService(jobPlanMapper, jobPlanScriptMapper)
+	jobPlanController := job.NewJobPlanController(jobPlanService)
+	return jobPlanController
+}
+
+// 初始化定时任务控制器
+func InitializeJobScheduledTaskController() *job.JobScheduledTaskController {
+	gormDB := db.NewDB()
+	jobScheduledTaskMapper := mapper.NewJobScheduledTaskMapper(gormDB)
+	jobScheduledTaskService := service.NewJobScheduledTaskService(jobScheduledTaskMapper)
+	jobScheduledTaskController := job.NewJobScheduledTaskController(jobScheduledTaskService)
+	return jobScheduledTaskController
+}
+
+// 初始化作业日志控制器
+func InitializeJobPlanLogController() *job.JobPlanLogController {
+	gormDB := db.NewDB()
+	jobPlanLogMapper := mapper.NewJobPlanLogMapper(gormDB)
+	jobPlanLogService := service.NewJobPlanLogService(jobPlanLogMapper)
+	jobPlanLogController := job.NewJobPlanLogController(jobPlanLogService)
+	return jobPlanLogController
+}
+
+// 初始化shell脚本控制器
+func InitializeShellScriptExecutor() *script_executors.ShellExecutor {
+	gormDB := db.NewDB()
+	hostMapper := mapper.NewHostMapper(gormDB)
+	shellExecutor := script_executors.NewShellExecutor(hostMapper)
+	return shellExecutor
 }
