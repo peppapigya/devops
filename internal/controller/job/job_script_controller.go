@@ -94,5 +94,42 @@ func (ctrl *JobScriptController) GetJobScriptById(c *gin.Context) {
 	if c.IsAborted() {
 		return
 	}
-	ctrl.jobScriptService.GetJobScriptById(c, id)
+	script, err := ctrl.jobScriptService.GetJobScriptById(id)
+	if err != nil {
+		common.FailWithError(c, err)
+		return
+	}
+	common.Success(c, script)
+}
+
+// @Tags 作业脚本管理
+// @Summary 获取脚本下拉框
+// @Param condition query string true "条件"
+// @Router /jobs/script/select [get]
+func (ctrl *JobScriptController) GetJobScriptSelect(c *gin.Context) {
+	var condition string
+	util.GetParam(c, "condition", &condition, nil)
+	scriptSelect, err := ctrl.jobScriptService.GetJobScriptSelect(condition)
+	if err != nil {
+		common.FailWithError(c, err)
+		return
+	}
+	common.Success(c, scriptSelect)
+}
+
+// @Tags 作业脚本管理
+// @Summary 执行脚本
+// @Param request body dto.ExecutorScript true "请求参数"
+func (ctrl *JobScriptController) ExecuteJobScript(c *gin.Context) {
+	var script dto.ExecutorScript
+	if ok := util.BindAndValidate(c, &script); !ok {
+		log.Printf("参数解析失败或验证失败\n")
+		return
+	}
+	result, err := ctrl.jobScriptService.ExecuteJobScript(c, script)
+	if err != nil {
+		common.FailWithError(c, err)
+		return
+	}
+	common.Success(c, result)
 }

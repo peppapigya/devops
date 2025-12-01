@@ -1,0 +1,29 @@
+package util
+
+import (
+	"fmt"
+	"time"
+)
+
+// 格式化持续时间
+func formatDuration(duration time.Duration) string {
+	milliseconds := duration.Milliseconds()
+
+	if milliseconds < 1000 {
+		return fmt.Sprintf("%dms", milliseconds)
+	}
+	seconds := milliseconds / 1000.0
+	if seconds < 60 {
+		return fmt.Sprintf("%.3d秒", seconds)
+	}
+
+	minutes := milliseconds / 60
+	second := milliseconds % 60
+	if minutes < 60 {
+		return fmt.Sprintf("%d分%d秒", minutes, second)
+	}
+
+	hours := minutes / 60
+	minute := minutes % 60
+	return fmt.Sprintf("%d时%d分", hours, minute)
+}

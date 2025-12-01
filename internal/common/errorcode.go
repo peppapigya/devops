@@ -7,6 +7,10 @@ type ErrorCode struct {
 	Msg  string
 }
 
+func (e ErrorCode) Error() string {
+	return e.Msg
+}
+
 var (
 	// =======================  系统相关 ========================
 
@@ -26,6 +30,7 @@ var (
 	// =======================  主机相关 ========================
 	HostNotExist    = NewErrorCode(20001, "主机不存在")
 	HostUnreachable = NewErrorCode(20002, "主机不可达")
+	HostIdsEmpty    = NewErrorCode(20003, "主机ID不能为空")
 
 	// =======================  菜单相关 ========================
 	MenuNotExist = NewErrorCode(30001, "菜单不存在")
@@ -36,6 +41,11 @@ var (
 	MenuNameExist = NewErrorCode(30004, "菜单名称在该父菜单下已存在")
 	// 该菜单下存在子菜单，不能删除
 	MenuHasChildren = NewErrorCode(30005, "该菜单下存在子菜单，不能删除")
+
+	// =======================  job 相关 ========================
+	// 获取脚本工厂失败
+	ScriptFactoryNotExist = NewErrorCode(40001, "获取脚本工厂失败")
+	ScriptNotExist        = NewErrorCode(40002, "脚本不存在")
 )
 
 // NewErrorCode 创建错误码，方便后续业务调用

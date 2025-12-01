@@ -3,18 +3,21 @@ package mapper
 import (
 	"k8s-platform-go/internal/dal/dto"
 	"k8s-platform-go/internal/dal/model"
+	"k8s-platform-go/internal/dal/query"
 	"k8s-platform-go/internal/util"
 
 	"gorm.io/gorm"
 )
 
 type JobScriptMapper struct {
-	DB *gorm.DB
+	DB    *gorm.DB
+	query *query.Query
 }
 
 func NewJobScriptMapper(DB *gorm.DB) *JobScriptMapper {
 	return &JobScriptMapper{
-		DB: DB,
+		DB:    DB,
+		query: query.Use(DB),
 	}
 }
 
@@ -67,4 +70,13 @@ func (m *JobScriptMapper) GetJobScriptPage(request dto.JobScriptPageRequest) (ut
 		PageNum:  request.PageNum,
 		PageSize: request.PageSize,
 	}, nil
+}
+
+// SelectListByCondition 根据脚本的名字查询脚本
+func (m *JobScriptMapper) SelectListByCondition(condition string) ([]*model.JobScript, error) {
+	script := m.query.JobScript
+	if condition != "" {
+		return script.Where(script.Name.Like("%" + condition + "%")).Find()
+	}
+	return script.Find()
 }

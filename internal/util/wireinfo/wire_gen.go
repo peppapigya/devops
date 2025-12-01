@@ -13,6 +13,7 @@ import (
 	"k8s-platform-go/internal/dal/redis"
 	"k8s-platform-go/internal/mapper"
 	"k8s-platform-go/internal/service"
+	"k8s-platform-go/internal/strategy/script_executors"
 )
 
 // Injectors from wire.go:
@@ -99,4 +100,12 @@ func InitializeJobPlanLogController() *job.JobPlanLogController {
 	jobPlanLogService := service.NewJobPlanLogService(jobPlanLogMapper)
 	jobPlanLogController := job.NewJobPlanLogController(jobPlanLogService)
 	return jobPlanLogController
+}
+
+// 初始化shell脚本控制器
+func InitializeShellScriptExecutor() *script_executors.ShellExecutor {
+	gormDB := db.NewDB()
+	hostMapper := mapper.NewHostMapper(gormDB)
+	shellExecutor := script_executors.NewShellExecutor(hostMapper)
+	return shellExecutor
 }

@@ -22,6 +22,8 @@ func InitJobRouter(rg *gin.RouterGroup) {
 			scriptGroup.DELETE("/:id", jobScriptController.DeleteJobScript)
 			scriptGroup.POST("/page", jobScriptController.GetJobScriptPage)
 			scriptGroup.GET("/:id", jobScriptController.GetJobScriptById)
+			scriptGroup.GET("/select", jobScriptController.GetJobScriptSelect)
+			scriptGroup.POST("/execute", jobScriptController.ExecuteJobScript)
 		}
 
 		// Plan routes

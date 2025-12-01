@@ -10,6 +10,7 @@ import (
 	"k8s-platform-go/internal/dal/redis"
 	"k8s-platform-go/internal/mapper"
 	"k8s-platform-go/internal/service"
+	strategy "k8s-platform-go/internal/strategy/script_executors"
 
 	"github.com/google/wire"
 )
@@ -66,4 +67,10 @@ func InitializeJobScheduledTaskController() *job.JobScheduledTaskController {
 func InitializeJobPlanLogController() *job.JobPlanLogController {
 	wire.Build(db.NewDB, mapper.NewJobPlanLogMapper, service.NewJobPlanLogService, job.NewJobPlanLogController)
 	return &job.JobPlanLogController{}
+}
+
+// 初始化shell脚本控制器
+func InitializeShellScriptExecutor() *strategy.ShellExecutor {
+	wire.Build(db.NewDB, mapper.NewHostMapper, strategy.NewShellExecutor)
+	return &strategy.ShellExecutor{}
 }
