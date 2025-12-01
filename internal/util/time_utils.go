@@ -14,7 +14,7 @@ func formatDuration(duration time.Duration) string {
 	}
 	seconds := milliseconds / 1000.0
 	if seconds < 60 {
-		return fmt.Sprintf("%.3d秒", seconds)
+		return fmt.Sprintf("%d秒", seconds)
 	}
 
 	minutes := milliseconds / 60

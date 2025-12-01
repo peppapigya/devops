@@ -22,5 +22,10 @@ jwt:
     - /api/v1/sysUser/captcha
     - /swagger/*
     - /jobs/script/
+job:
+  script:
+    #  脚本执全局超时时间
+    global-timeout: 60
+
 
 

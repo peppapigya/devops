@@ -3,6 +3,7 @@ package script_executors
 import (
 	"fmt"
 	"k8s-platform-go/internal/common"
+	"k8s-platform-go/internal/config"
 	"k8s-platform-go/internal/dal/dto"
 	"k8s-platform-go/internal/mapper"
 	"k8s-platform-go/internal/util"
@@ -68,7 +69,7 @@ func (s ShellExecutor) Execute(c *gin.Context, script *dto.ExecutorScript) (map[
 	executorScript := fmt.Sprintf("bash %s %s", scriptFileName, script.Parameters)
 	commands = append(commands, executorScript)
 	return util.BatchExecuteCommands(hostInfos, commands, &util.BatchConfig{
-		MaxConcurrent: 10,
+		MaxConcurrent: config.GetGlobalConfig().Job.Script.GlobalTimeout,
 		GlobalTimeout: time.Duration(script.TimeOut),
 	})
 }
