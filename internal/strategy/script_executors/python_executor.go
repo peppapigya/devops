@@ -9,6 +9,11 @@ import (
 
 type PythonExecutor struct{}
 
+func (p PythonExecutor) ExecuteStream(c *gin.Context, script *dto.ExecutorScript, onEvent func(util.StreamEvent)) (map[string][]*util.ExecutorResult, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (p PythonExecutor) GetFileSuffix() string {
 	//TODO implement me
 	panic("implement me")

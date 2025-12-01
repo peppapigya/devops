@@ -39,7 +39,7 @@ type ExecutorResult struct {
 type BatchConfig struct {
 	// 最大并发数
 	MaxConcurrent int
-	GlobalTimeout time.Duration
+	GlobalTimeout int
 	PerCmdTimeout int
 }
 
@@ -175,8 +175,14 @@ func BatchExecuteCommands(hosts []*HostInfo, commands []string, config *BatchCon
 	)
 
 	semaphore := make(chan struct{}, config.MaxConcurrent)
-	ctx, cancel := context.WithTimeout(context.Background(), (config.GlobalTimeout)*time.Second)
-	defer cancel()
+	ctx := context.Background()
+	var cancel context.CancelFunc
+	// 只有全局超时时间时才启用全局超时限制
+	if config.GlobalTimeout > 0 {
+		ctx, cancel = context.WithTimeout(context.Background(), time.Duration(config.GlobalTimeout)*time.Second)
+		defer cancel()
+	}
+
 	for _, host := range hosts {
 		wg.Add(1)
 		go func(host *HostInfo) {

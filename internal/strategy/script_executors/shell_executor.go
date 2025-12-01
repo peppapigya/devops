@@ -18,6 +18,11 @@ type ShellExecutor struct {
 	hostMapper *mapper.HostMapper
 }
 
+func (s ShellExecutor) ExecuteStream(c *gin.Context, script *dto.ExecutorScript, onEvent func(util.StreamEvent)) (map[string][]*util.ExecutorResult, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (s ShellExecutor) GetFileSuffix() string {
 	return ".sh"
 }
@@ -69,7 +74,8 @@ func (s ShellExecutor) Execute(c *gin.Context, script *dto.ExecutorScript) (map[
 	executorScript := fmt.Sprintf("bash %s %s", scriptFileName, script.Parameters)
 	commands = append(commands, executorScript)
 	return util.BatchExecuteCommands(hostInfos, commands, &util.BatchConfig{
-		MaxConcurrent: config.GetGlobalConfig().Job.Script.GlobalTimeout,
-		GlobalTimeout: time.Duration(script.TimeOut),
+		MaxConcurrent: config.GetGlobalConfig().Job.MaxConcurrent,
+		GlobalTimeout: config.GetGlobalConfig().Job.Script.GlobalTimeout,
+		PerCmdTimeout: script.TimeOut,
 	})
 }

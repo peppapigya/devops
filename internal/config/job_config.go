@@ -1,8 +1,10 @@
 package config
 
 type JobConfig struct {
-	Script struct {
-		GlobalTimeout int `mapstructure:"global-timeout"`
-		TimeOut       int `yaml:"timeout"`
-	} `yaml:"script"`
+	Script `yaml:"script"`
+}
+type Script struct {
+	GlobalTimeout int `mapstructure:"global-timeout"`
+	MaxConcurrent int `mapstructure:"max-concurrent"`
+	TimeOut       int `yaml:"timeout"`
 }

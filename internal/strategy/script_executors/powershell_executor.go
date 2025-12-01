@@ -9,6 +9,11 @@ import (
 
 type PowerShellExecutor struct{}
 
+func (p PowerShellExecutor) ExecuteStream(c *gin.Context, script *dto.ExecutorScript, onEvent func(util.StreamEvent)) (map[string][]*util.ExecutorResult, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (p PowerShellExecutor) GetFileSuffix() string {
 	return ""
 }

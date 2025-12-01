@@ -14,16 +14,16 @@ func formatDuration(duration time.Duration) string {
 	}
 	seconds := milliseconds / 1000.0
 	if seconds < 60 {
-		return fmt.Sprintf("%d秒", seconds)
+		return fmt.Sprintf("%ds", seconds)
 	}
 
 	minutes := milliseconds / 60
 	second := milliseconds % 60
 	if minutes < 60 {
-		return fmt.Sprintf("%d分%d秒", minutes, second)
+		return fmt.Sprintf("%dm%ds", minutes, second)
 	}
 
 	hours := minutes / 60
 	minute := minutes % 60
-	return fmt.Sprintf("%d时%d分", hours, minute)
+	return fmt.Sprintf("%dh%dm", hours, minute)
 }

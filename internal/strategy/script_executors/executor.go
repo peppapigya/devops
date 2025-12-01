@@ -25,6 +25,9 @@ type ScriptExecutor interface {
 
 	// Execute 执行脚本
 	Execute(c *gin.Context, script *dto.ExecutorScript) (map[string][]*util.ExecutorResult, error)
+
+	// ExecuteStream 流式执行
+	ExecuteStream(c *gin.Context, script *dto.ExecutorScript, onEvent func(util.StreamEvent)) (map[string][]*util.ExecutorResult, error)
 }
 
 // DefaultScriptExecutor 提供默认实现
