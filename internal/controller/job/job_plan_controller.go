@@ -23,7 +23,7 @@ func NewJobPlanController(jobPlanService *job.JobPlanService) *JobPlanController
 // @Tags 作业计划管理
 // @Summary 创建计划
 // @Param request body dto.JobPlanSaveRequest true "请求参数"
-// @Router /jobs/plan/create [post]
+// @Router /jobs/plan/ [post]
 func (ctrl *JobPlanController) CreateJobPlan(c *gin.Context) {
 	var req dto.JobPlanSaveRequest
 	if ok := util.BindAndValidate(c, &req); !ok {
@@ -36,7 +36,7 @@ func (ctrl *JobPlanController) CreateJobPlan(c *gin.Context) {
 // @Tags 作业计划管理
 // @Summary 更新计划
 // @Param request body dto.JobPlanSaveRequest true "请求参数"
-// @Router /jobs/plan/update [post]
+// @Router /jobs/plan/ [post]
 func (ctrl *JobPlanController) UpdateJobPlan(c *gin.Context) {
 	var req dto.JobPlanSaveRequest
 	if ok := util.BindAndValidate(c, &req); !ok {
@@ -49,7 +49,7 @@ func (ctrl *JobPlanController) UpdateJobPlan(c *gin.Context) {
 // @Tags 作业计划管理
 // @Summary 删除计划
 // @Param id path int true "计划ID"
-// @Router /jobs/plan/delete [delete]
+// @Router /jobs/plan/ [delete]
 func (ctrl *JobPlanController) DeleteJobPlan(c *gin.Context) {
 	var id int64
 	util.GetParam(c, "id", &id, func(param interface{}) {
@@ -75,13 +75,19 @@ func (ctrl *JobPlanController) GetJobPlanPage(c *gin.Context) {
 		log.Printf("参数解析失败或验证失败\n")
 		return
 	}
-	ctrl.jobPlanService.GetJobPlanPage(c, req)
+	res, err := ctrl.jobPlanService.GetJobPlanPage(req)
+	if err != nil {
+		common.BusinessFail(c, err.Error())
+		c.Abort()
+		return
+	}
+	common.Success(c, res)
 }
 
 // @Tags 作业计划管理
 // @Summary 获取计划详情
 // @Param id path int true "计划ID"
-// @Router /jobs/plan/detail [get]
+// @Router /jobs/plan/ [get]
 func (ctrl *JobPlanController) GetJobPlanById(c *gin.Context) {
 	var id int64
 	util.GetParam(c, "id", &id, func(param interface{}) {

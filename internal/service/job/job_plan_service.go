@@ -5,6 +5,8 @@ import (
 	"k8s-platform-go/internal/dal/dto"
 	"k8s-platform-go/internal/dal/model"
 	"k8s-platform-go/internal/mapper/job"
+	"k8s-platform-go/internal/util"
+	"log"
 
 	"github.com/gin-gonic/gin"
 )
@@ -25,7 +27,7 @@ func (s *JobPlanService) CreateJobPlan(c *gin.Context, req dto.JobPlanSaveReques
 	plan := &model.JobPlan{
 		Name:        req.Name,
 		GlobalVars:  req.GlobalVars,
-		HostIds:     req.HostIds,
+		HostIds:     util.ArrayToString(req.HostIds),
 		HostGroupID: &req.HostGroupId,
 		Remark:      &req.Remark,
 	}
@@ -36,17 +38,17 @@ func (s *JobPlanService) CreateJobPlan(c *gin.Context, req dto.JobPlanSaveReques
 		return
 	}
 
-	// Insert relations
-	if len(req.ScriptIds) > 0 {
+	if len(req.Scripts) > 0 {
 		var planScripts []model.JobPlanScript
-		for i, scriptId := range req.ScriptIds {
+		for i, script := range req.Scripts {
 			planScripts = append(planScripts, model.JobPlanScript{
 				PlanID:   plan.ID,
-				ScriptID: int32(scriptId),
+				ScriptID: script.ScriptId,
 				Sort:     uint32(i),
+				Name:     script.Name,
 			})
 		}
-		s.jobPlanScriptMapper.InsertJobPlanScripts(planScripts)
+		_ = s.jobPlanScriptMapper.InsertJobPlanScripts(planScripts)
 	}
 
 	common.Success(c, true)
@@ -61,7 +63,7 @@ func (s *JobPlanService) UpdateJobPlan(c *gin.Context, req dto.JobPlanSaveReques
 
 	plan.Name = req.Name
 	plan.GlobalVars = req.GlobalVars
-	plan.HostIds = req.HostIds
+	plan.HostIds = util.ArrayToString(req.HostIds)
 	plan.HostGroupID = &req.HostGroupId
 	plan.Remark = &req.Remark
 
@@ -71,18 +73,18 @@ func (s *JobPlanService) UpdateJobPlan(c *gin.Context, req dto.JobPlanSaveReques
 		return
 	}
 
-	// Update relations: Delete all and re-insert
-	s.jobPlanScriptMapper.DeleteJobPlanScripts(int64(plan.ID))
-	if len(req.ScriptIds) > 0 {
+	_ = s.jobPlanScriptMapper.DeleteJobPlanScripts(int64(plan.ID))
+	if len(req.Scripts) > 0 {
 		var planScripts []model.JobPlanScript
-		for i, scriptId := range req.ScriptIds {
+		for i, scripts := range req.Scripts {
 			planScripts = append(planScripts, model.JobPlanScript{
 				PlanID:   plan.ID,
-				ScriptID: int32(scriptId),
+				ScriptID: scripts.ScriptId,
 				Sort:     uint32(i),
+				Name:     scripts.Name,
 			})
 		}
-		s.jobPlanScriptMapper.InsertJobPlanScripts(planScripts)
+		_ = s.jobPlanScriptMapper.InsertJobPlanScripts(planScripts)
 	}
 
 	common.Success(c, true)
@@ -97,13 +99,35 @@ func (s *JobPlanService) DeleteJobPlan(c *gin.Context, id int64) {
 	common.Success(c, true)
 }
 
-func (s *JobPlanService) GetJobPlanPage(c *gin.Context, req dto.JobPlanPageRequest) {
+func (s *JobPlanService) GetJobPlanPage(req dto.JobPlanPageRequest) (*util.PageInfoResponse[dto.JobPlanPageResponse], error) {
 	pageResult, err := s.jobPlanMapper.GetJobPlanPage(req)
 	if err != nil {
-		common.Fail(c, common.ServerError)
-		return
+		return nil, common.ServerError
 	}
-	common.Success(c, pageResult)
+	jobPlans, ok := pageResult.Data.([]*model.JobPlan)
+	if !ok {
+		log.Fatalln("断言失败")
+		return nil, common.ServerError
+	}
+	// 数据转化
+	list, err := common.ConvertList(jobPlans, func(jobPlan *model.JobPlan) (*dto.JobPlanPageResponse, error) {
+		jobPlanPage := buildJobPlanPageResponse(jobPlan)
+		planScript, err := s.jobPlanScriptMapper.GetJobPlanScriptsByPlanId(jobPlan.ID)
+		if err != nil {
+			return nil, err
+		}
+		jobPlanPage.Scripts = buildJobPlanScript(planScript)
+		return jobPlanPage, nil
+	})
+	if err != nil {
+		return nil, common.ServerError
+	}
+
+	res := &util.PageInfoResponse[dto.JobPlanPageResponse]{
+		Total: pageResult.Total,
+		Data:  list,
+	}
+	return res, nil
 }
 
 func (s *JobPlanService) GetJobPlanById(c *gin.Context, id int64) {
@@ -112,5 +136,38 @@ func (s *JobPlanService) GetJobPlanById(c *gin.Context, id int64) {
 		common.Fail(c, common.ServerError)
 		return
 	}
-	common.Success(c, plan)
+	planScript, err := s.jobPlanScriptMapper.GetJobPlanScriptsByPlanId(plan.ID)
+	res := buildJobPlanPageResponse(plan)
+	res.Scripts = buildJobPlanScript(planScript)
+	common.Success(c, res)
+}
+
+// 构建计划脚本
+func buildJobPlanScript(jobPlanScripts []*model.JobPlanScript) []dto.JobPlanScriptResponse {
+	res := make([]dto.JobPlanScriptResponse, 0)
+	for _, jobPlanScript := range jobPlanScripts {
+		res = append(res, dto.JobPlanScriptResponse{
+			ID:         jobPlanScript.ID,
+			PlanId:     jobPlanScript.PlanID,
+			ScriptId:   jobPlanScript.ScriptID,
+			Sort:       jobPlanScript.Sort,
+			ScriptName: jobPlanScript.Name,
+		})
+	}
+	return res
+}
+
+// 构建计划分页响应
+func buildJobPlanPageResponse(plan *model.JobPlan) *dto.JobPlanPageResponse {
+	return &dto.JobPlanPageResponse{
+		ID:          plan.ID,
+		Name:        plan.Name,
+		GlobalVars:  plan.GlobalVars,
+		HostIds:     util.SplitString(plan.HostIds, ","),
+		HostGroupID: plan.HostGroupID,
+		Remark:      plan.Remark,
+		CreatedAt:   plan.CreatedAt,
+		UpdatedAt:   plan.UpdatedAt,
+		DeletedAt:   plan.DeletedAt,
+	}
 }

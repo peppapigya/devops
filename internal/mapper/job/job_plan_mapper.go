@@ -48,8 +48,8 @@ func (m *JobPlanMapper) GetJobPlanById(id int64) (*model.JobPlan, error) {
 	return &plan, nil
 }
 
-func (m *JobPlanMapper) GetJobPlanPage(request dto.JobPlanPageRequest) (util.PageInfoResponse[model.JobPlan], error) {
-	var plans []model.JobPlan
+func (m *JobPlanMapper) GetJobPlanPage(request dto.JobPlanPageRequest) (*util.PageInfoResponse[*model.JobPlan], error) {
+	var plans []*model.JobPlan
 	var total int64
 	db := m.DB.Model(&model.JobPlan{})
 	if request.Name != "" {
@@ -58,16 +58,16 @@ func (m *JobPlanMapper) GetJobPlanPage(request dto.JobPlanPageRequest) (util.Pag
 
 	err := db.Count(&total).Error
 	if err != nil {
-		return util.PageInfoResponse[model.JobPlan]{}, err
+		return &util.PageInfoResponse[*model.JobPlan]{}, err
 	}
 
 	offset := (request.PageNum - 1) * request.PageSize
 	err = db.Offset(offset).Limit(request.PageSize).Find(&plans).Error
 	if err != nil {
-		return util.PageInfoResponse[model.JobPlan]{}, err
+		return &util.PageInfoResponse[*model.JobPlan]{}, err
 	}
 
-	return util.PageInfoResponse[model.JobPlan]{
+	return &util.PageInfoResponse[*model.JobPlan]{
 		Total: total,
 		Data:  plans,
 	}, nil

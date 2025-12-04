@@ -18,7 +18,7 @@ type JobScript struct {
 	Name       string         `gorm:"column:name;type:varchar(255);not null;comment:脚本名称" json:"name"`                                  // 脚本名称
 	Type       string         `gorm:"column:type;type:varchar(20);not null;comment:类型" json:"type"`                                     // 类型
 	Category   string         `gorm:"column:category;type:varchar(30);not null;comment:类别，默认是default" json:"category"`                  // 类别，默认是default
-	Content    string         `gorm:"column:content;type:varchar(500);not null;comment:脚本内容" json:"content"`                            // 脚本内容
+	Content    string         `gorm:"column:content;type:text;not null;comment:脚本内容" json:"content"`                                    // 脚本内容
 	Parameters string         `gorm:"column:parameters;type:varchar(255);not null;comment:脚本参数" json:"parameters"`                      // 脚本参数
 	Timeout    uint32         `gorm:"column:timeout;type:int(10) unsigned;not null;comment:超时时间" json:"timeout"`                        // 超时时间
 	WorkDir    *string        `gorm:"column:work_dir;type:varchar(255);comment:工作路径" json:"workDir"`                                    // 工作路径

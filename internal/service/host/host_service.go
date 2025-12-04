@@ -42,7 +42,7 @@ func (hostService *HostService) GetHostPage(request dto.HostPageRequest, c *gin.
 }
 
 func (hostService *HostService) CreateHost(request dto.CreateHostDTO, c *gin.Context) {
-	host := &model.Host{
+	hostInfo := &model.Host{
 		HostName:     request.HostName,
 		Address:      request.Address,
 		HostPort:     request.HostPort,
@@ -51,7 +51,7 @@ func (hostService *HostService) CreateHost(request dto.CreateHostDTO, c *gin.Con
 		Remark:       &request.Remark,
 	}
 
-	err := hostService.hostMapper.InsertHost(host)
+	err := hostService.hostMapper.InsertHost(hostInfo)
 	if err != nil {
 		log.Printf("添加主机失败: %v", err)
 		common.Fail(c, common.ServerError)
@@ -61,7 +61,7 @@ func (hostService *HostService) CreateHost(request dto.CreateHostDTO, c *gin.Con
 }
 
 func (hostService *HostService) UpdateHost(request dto.UpdateHostDTO, c *gin.Context) {
-	host := &model.Host{
+	hostInfo := &model.Host{
 		ID:       request.ID,
 		HostName: request.HostName,
 		Address:  request.Address,
@@ -72,10 +72,10 @@ func (hostService *HostService) UpdateHost(request dto.UpdateHostDTO, c *gin.Con
 
 	// 如果密码不为空，则更新密码
 	if request.HostPassword != "" {
-		host.HostPassword = &request.HostPassword
+		hostInfo.HostPassword = &request.HostPassword
 	}
 
-	err := hostService.hostMapper.UpdateHost(host)
+	err := hostService.hostMapper.UpdateHost(hostInfo)
 	if err != nil {
 		log.Printf("更新主机失败: %v", err)
 		common.Fail(c, common.ServerError)
@@ -97,19 +97,19 @@ func (hostService *HostService) DeleteHost(id int, c *gin.Context) {
 func (hostService *HostService) TestConnection(id int) (string, *common.ErrorCode) {
 	// 这里应该实现实际的连接测试逻辑
 	// 目前返回模拟结果
-	host, err := hostService.hostMapper.SelectHostById(id)
+	hostInfo, err := hostService.hostMapper.SelectHostById(id)
 	if err != nil {
 		return "", nil
 	}
 
-	if host == nil {
+	if hostInfo == nil {
 		return "主机不存在", common.HostNotExist
 	}
 	remoteHostInfo := &util.HostInfo{
-		Address:  host.Address,
-		Port:     int(host.HostPort),
-		Username: host.Username,
-		Password: *host.HostPassword,
+		Address:  hostInfo.Address,
+		Port:     int(hostInfo.HostPort),
+		Username: hostInfo.Username,
+		Password: *hostInfo.HostPassword,
 		Timeout:  5 * time.Second,
 	}
 	// 测试ping主机
@@ -122,19 +122,19 @@ func (hostService *HostService) TestConnection(id int) (string, *common.ErrorCod
 }
 
 func (hostService *HostService) InspectHost(id int) (interface{}, *common.ErrorCode) {
-	host, err := hostService.hostMapper.SelectHostById(id)
+	hostInfo, err := hostService.hostMapper.SelectHostById(id)
 	if err != nil {
 		return nil, common.ServerError
 	}
 
-	if host == nil {
+	if hostInfo == nil {
 		return nil, common.ServerError
 	}
 	remoteHostInfo := &util.HostInfo{
-		Address:  host.Address,
-		Port:     int(host.HostPort),
-		Username: host.Username,
-		Password: *host.HostPassword,
+		Address:  hostInfo.Address,
+		Port:     int(hostInfo.HostPort),
+		Username: hostInfo.Username,
+		Password: *hostInfo.HostPassword,
 		Timeout:  5 * time.Second,
 	}
 	info, err := CheckHostInfo(remoteHostInfo)
@@ -151,12 +151,12 @@ func (hostService *HostService) GetHostSelectList() ([]*dto.HostsSelectInfo, err
 	}
 	var hosts []*dto.HostsSelectInfo
 	// 转化为dto
-	hosts, _ = common.ConvertList(list, func(host *model.Host) *dto.HostsSelectInfo {
+	hosts, _ = common.ConvertList(list, func(host *model.Host) (*dto.HostsSelectInfo, error) {
 		return &dto.HostsSelectInfo{
 			Id:    int(host.ID),
 			Label: host.HostName + "(" + host.Address + ")",
 			Value: strconv.Itoa(int(host.ID)),
-		}
+		}, nil
 	})
 	return hosts, nil
 
@@ -169,7 +169,9 @@ func CheckHostInfo(hostInfo *util.HostInfo) (interface{}, error) {
 		log.Printf("连接失败: %v", err)
 		return nil, err
 	}
-	defer client.Close()
+	defer func(client *ssh.Client) {
+		_ = client.Close()
+	}(client)
 
 	// 声明需要执行的命令
 	commands := []item{
@@ -207,7 +209,9 @@ func ExecuteCommand(client *ssh.Client, commands []item) (map[string]string, err
 		log.Printf("创建会话失败: %v", err)
 		return result, err
 	}
-	defer session.Close()
+	defer func(session *ssh.Session) {
+		_ = session.Close()
+	}(session)
 	var wg sync.WaitGroup
 	var mutex sync.Mutex
 
@@ -228,7 +232,9 @@ func ExecuteCommand(client *ssh.Client, commands []item) (map[string]string, err
 				mutex.Unlock()
 				return
 			}
-			defer session.Close()
+			defer func(session *ssh.Session) {
+				_ = session.Close()
+			}(session)
 
 			output, err := session.Output(cmdItem.cmd)
 			mutex.Lock()

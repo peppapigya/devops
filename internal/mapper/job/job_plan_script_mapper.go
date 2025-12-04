@@ -32,3 +32,9 @@ func (m *JobPlanScriptMapper) GetJobPlanScripts(planId int64) ([]model.JobPlanSc
 	err := m.DB.Where("plan_id = ?", planId).Order("sort asc").Find(&scripts).Error
 	return scripts, err
 }
+
+func (m *JobPlanScriptMapper) GetJobPlanScriptsByPlanId(id uint32) ([]*model.JobPlanScript, error) {
+	var scripts []*model.JobPlanScript
+	err := m.DB.Where("plan_id = ?", id).Find(&scripts).Error
+	return scripts, err
+}
