@@ -14,6 +14,7 @@ type GlobalConfig struct {
 	Jwt      *JwtProperties
 	Redis    *RedisProperties
 	Job      *JobConfig `yaml:"job"`
+	Log      *LogProperties
 }
 
 // DatabaseDO 数据库配置
@@ -36,6 +37,14 @@ type RedisProperties struct {
 	Password string
 	Username string
 	DB       int
+}
+
+// LogProperties 日志配置
+type LogProperties struct {
+	Enable bool
+	Path   string
+	Level  string
+	Stdout bool
 }
 
 // JwtProperties JWT 配置

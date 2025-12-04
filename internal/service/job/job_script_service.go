@@ -158,3 +158,7 @@ func (s *JobScriptService) getScriptFromDatabase(script *dto.ExecutorScript) err
 	}
 	return nil
 }
+
+func (s *JobScriptService) DistributeJobScript(c *gin.Context, distribute dto.DistributeJobScript) (map[string][]*dto.DistributeResult, error) {
+	return nil, nil
+}
