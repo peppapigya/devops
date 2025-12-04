@@ -133,3 +133,18 @@ func (ctrl *JobScriptController) ExecuteJobScript(c *gin.Context) {
 	}
 	common.Success(c, result)
 }
+
+// 分发脚本或脚本文件
+func (ctrl *JobScriptController) DistributeJobScript(c *gin.Context) {
+	//var distribute dto.DistributeJobScript
+	//if ok := util.BindAndValidate(c, &distribute); !ok {
+	//	log.Printf("参数解析失败或验证失败\n")
+	//	return
+	//}
+	//result, err := ctrl.jobScriptService.DistributeJobScript(c, distribute)
+	//if err != nil {
+	//	common.FailWithError(c, err)
+	//	return
+	//}
+	//common.Success(c, result)
+}

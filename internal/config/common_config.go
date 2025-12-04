@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 
+	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 	"gorm.io/gorm"
 )
@@ -23,8 +24,9 @@ type DatabaseDO struct {
 
 // ServerConfig 服务器配置
 type ServerConfig struct {
-	Port  string
-	Debug bool
+	Port           string
+	Debug          bool
+	TrustedProxies []string `mapstructure:"trusted-proxies"`
 }
 
 // RedisProperties Redis 配置
@@ -52,7 +54,8 @@ func LoadConfig() error {
 	v.AddConfigPath("./configs")
 
 	v.SetConfigType("yaml") // 匹配的文件后缀
-	v.SetConfigName("config")
+	configName := getConfigNameByMode()
+	v.SetConfigName(configName)
 	// 读取配置
 
 	if err := v.ReadInConfig(); err != nil {
@@ -63,6 +66,20 @@ func LoadConfig() error {
 		return fmt.Errorf("unmarshal global config error : %v\n", err)
 	}
 	return nil
+}
+
+// 根据启动模式去获取读取哪个配置文件
+func getConfigNameByMode() string {
+	switch gin.Mode() {
+	case gin.DebugMode:
+		return "config-dev"
+	case gin.ReleaseMode:
+		return "config-prod"
+	case gin.TestMode:
+		return "config-test"
+	default:
+		return "config"
+	}
 }
 
 // GetGlobalConfig 提供给外部获取全局配置

@@ -27,6 +27,7 @@ import (
 )
 
 func main() {
+	r := gin.Default()
 	// 加载配置文件
 	err := config.LoadConfig()
 	if err != nil {
@@ -43,13 +44,21 @@ func main() {
 	db.InitRedis()
 	defer db.CloseRedis()
 
-	r := gin.Default()
 	binding.Validator = &common.DefaultValidator{}
 	// 设置中间件
 	setMiddleware(r, globalConfig)
 	// 设置全局路由
 	router.InitRouter(r)
+	fmt.Printf("代理地址%v\n", globalConfig.Server.TrustedProxies)
+	// 设置代理，避免gin启动告警,todo @dxg 后续优化到配置文件当中
+	if globalConfig.Server.TrustedProxies != nil {
+		err = r.SetTrustedProxies(globalConfig.Server.TrustedProxies)
+		if err != nil {
+			_ = fmt.Errorf("set trusted proxies error: %v", err)
+		}
+	}
 
+	fmt.Printf("启动环境: %s\n", gin.Mode())
 	err = r.Run(fmt.Sprintf(":%s", globalConfig.Server.Port))
 	if err != nil {
 		log.Printf("server run faild: %v", err)
