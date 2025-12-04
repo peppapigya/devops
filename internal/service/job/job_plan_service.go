@@ -1,20 +1,20 @@
-package service
+package job
 
 import (
 	"k8s-platform-go/internal/common"
 	"k8s-platform-go/internal/dal/dto"
 	"k8s-platform-go/internal/dal/model"
-	"k8s-platform-go/internal/mapper"
+	"k8s-platform-go/internal/mapper/job"
 
 	"github.com/gin-gonic/gin"
 )
 
 type JobPlanService struct {
-	jobPlanMapper       *mapper.JobPlanMapper
-	jobPlanScriptMapper *mapper.JobPlanScriptMapper
+	jobPlanMapper       *job.JobPlanMapper
+	jobPlanScriptMapper *job.JobPlanScriptMapper
 }
 
-func NewJobPlanService(jobPlanMapper *mapper.JobPlanMapper, jobPlanScriptMapper *mapper.JobPlanScriptMapper) *JobPlanService {
+func NewJobPlanService(jobPlanMapper *job.JobPlanMapper, jobPlanScriptMapper *job.JobPlanScriptMapper) *JobPlanService {
 	return &JobPlanService{
 		jobPlanMapper:       jobPlanMapper,
 		jobPlanScriptMapper: jobPlanScriptMapper,

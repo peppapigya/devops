@@ -1,11 +1,11 @@
 // internal/controller/host_controller.go
 
-package system
+package host
 
 import (
 	"k8s-platform-go/internal/common"
 	"k8s-platform-go/internal/dal/dto"
-	"k8s-platform-go/internal/service"
+	"k8s-platform-go/internal/service/host"
 	"k8s-platform-go/internal/util"
 	"log"
 	"strconv"
@@ -14,10 +14,10 @@ import (
 )
 
 type HostController struct {
-	hostService *service.HostService
+	hostService *host.HostService
 }
 
-func NewHostController(hostService *service.HostService) *HostController {
+func NewHostController(hostService *host.HostService) *HostController {
 	return &HostController{
 		hostService: hostService,
 	}

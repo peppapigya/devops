@@ -3,7 +3,7 @@ package job
 import (
 	"k8s-platform-go/internal/common"
 	"k8s-platform-go/internal/dal/dto"
-	"k8s-platform-go/internal/service"
+	"k8s-platform-go/internal/service/job"
 	"k8s-platform-go/internal/util"
 	"log"
 
@@ -11,10 +11,10 @@ import (
 )
 
 type JobScriptController struct {
-	jobScriptService *service.JobScriptService
+	jobScriptService *job.JobScriptService
 }
 
-func NewJobScriptController(jobScriptService *service.JobScriptService) *JobScriptController {
+func NewJobScriptController(jobScriptService *job.JobScriptService) *JobScriptController {
 	return &JobScriptController{
 		jobScriptService: jobScriptService,
 	}

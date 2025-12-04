@@ -1,11 +1,11 @@
-package service
+package job
 
 import (
 	"fmt"
 	"k8s-platform-go/internal/common"
 	"k8s-platform-go/internal/dal/dto"
 	"k8s-platform-go/internal/dal/model"
-	"k8s-platform-go/internal/mapper"
+	"k8s-platform-go/internal/mapper/job"
 	"k8s-platform-go/internal/strategy"
 	"k8s-platform-go/internal/util"
 
@@ -13,10 +13,10 @@ import (
 )
 
 type JobScriptService struct {
-	jobScriptMapper *mapper.JobScriptMapper
+	jobScriptMapper *job.JobScriptMapper
 }
 
-func NewJobScriptService(jobScriptMapper *mapper.JobScriptMapper) *JobScriptService {
+func NewJobScriptService(jobScriptMapper *job.JobScriptMapper) *JobScriptService {
 	return &JobScriptService{
 		jobScriptMapper: jobScriptMapper,
 	}

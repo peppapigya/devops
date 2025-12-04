@@ -3,16 +3,16 @@ package system
 import (
 	"k8s-platform-go/internal/common"
 	"k8s-platform-go/internal/dal/dto"
-	"k8s-platform-go/internal/service"
+	"k8s-platform-go/internal/service/system"
 	"k8s-platform-go/internal/util"
 	"log"
 
 	"github.com/gin-gonic/gin"
 )
 
-type DictTypeController struct{ s *service.DictTypeService }
+type DictTypeController struct{ s *system.DictTypeService }
 
-func NewDictTypeController(s *service.DictTypeService) *DictTypeController {
+func NewDictTypeController(s *system.DictTypeService) *DictTypeController {
 	return &DictTypeController{s: s}
 }
 

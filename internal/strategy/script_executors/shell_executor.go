@@ -5,7 +5,7 @@ import (
 	"k8s-platform-go/internal/common"
 	"k8s-platform-go/internal/config"
 	"k8s-platform-go/internal/dal/dto"
-	"k8s-platform-go/internal/mapper"
+	"k8s-platform-go/internal/mapper/host"
 	"k8s-platform-go/internal/util"
 	"time"
 
@@ -15,7 +15,7 @@ import (
 // shell 策略执行器
 
 type ShellExecutor struct {
-	hostMapper *mapper.HostMapper
+	hostMapper *host.HostMapper
 }
 
 func (s ShellExecutor) ExecuteStream(c *gin.Context, script *dto.ExecutorScript, onEvent func(util.StreamEvent)) (map[string][]*util.ExecutorResult, error) {
@@ -32,7 +32,7 @@ func (s ShellExecutor) Prepare(script *dto.ExecutorScript) ([]string, string) {
 	return defaultScript.Prepare(script)
 }
 
-func NewShellExecutor(hostMapper *mapper.HostMapper) *ShellExecutor {
+func NewShellExecutor(hostMapper *host.HostMapper) *ShellExecutor {
 	return &ShellExecutor{
 		hostMapper: hostMapper,
 	}

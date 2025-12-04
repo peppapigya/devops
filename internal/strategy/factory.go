@@ -2,7 +2,7 @@ package strategy
 
 import (
 	"k8s-platform-go/internal/config/db"
-	"k8s-platform-go/internal/mapper"
+	"k8s-platform-go/internal/mapper/host"
 	strategy "k8s-platform-go/internal/strategy/script_executors"
 )
 
@@ -14,7 +14,7 @@ func NewExecutorFactory() *ScriptExecutorFactory {
 	factory := &ScriptExecutorFactory{
 		Executors: make(map[string]strategy.ScriptExecutor),
 	}
-	factory.Register(strategy.NewShellExecutor(mapper.NewHostMapper(db.NewDB())))
+	factory.Register(strategy.NewShellExecutor(host.NewHostMapper(db.NewDB())))
 	factory.Register(strategy.PythonExecutor{})
 	factory.Register(strategy.PowerShellExecutor{})
 

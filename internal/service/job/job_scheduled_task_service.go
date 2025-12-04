@@ -1,19 +1,19 @@
-package service
+package job
 
 import (
 	"k8s-platform-go/internal/common"
 	"k8s-platform-go/internal/dal/dto"
 	"k8s-platform-go/internal/dal/model"
-	"k8s-platform-go/internal/mapper"
+	"k8s-platform-go/internal/mapper/job"
 
 	"github.com/gin-gonic/gin"
 )
 
 type JobScheduledTaskService struct {
-	jobScheduledTaskMapper *mapper.JobScheduledTaskMapper
+	jobScheduledTaskMapper *job.JobScheduledTaskMapper
 }
 
-func NewJobScheduledTaskService(jobScheduledTaskMapper *mapper.JobScheduledTaskMapper) *JobScheduledTaskService {
+func NewJobScheduledTaskService(jobScheduledTaskMapper *job.JobScheduledTaskMapper) *JobScheduledTaskService {
 	return &JobScheduledTaskService{
 		jobScheduledTaskMapper: jobScheduledTaskMapper,
 	}

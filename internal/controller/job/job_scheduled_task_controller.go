@@ -3,7 +3,7 @@ package job
 import (
 	"k8s-platform-go/internal/common"
 	"k8s-platform-go/internal/dal/dto"
-	"k8s-platform-go/internal/service"
+	"k8s-platform-go/internal/service/job"
 	"k8s-platform-go/internal/util"
 	"log"
 
@@ -11,10 +11,10 @@ import (
 )
 
 type JobScheduledTaskController struct {
-	jobScheduledTaskService *service.JobScheduledTaskService
+	jobScheduledTaskService *job.JobScheduledTaskService
 }
 
-func NewJobScheduledTaskController(jobScheduledTaskService *service.JobScheduledTaskService) *JobScheduledTaskController {
+func NewJobScheduledTaskController(jobScheduledTaskService *job.JobScheduledTaskService) *JobScheduledTaskController {
 	return &JobScheduledTaskController{
 		jobScheduledTaskService: jobScheduledTaskService,
 	}

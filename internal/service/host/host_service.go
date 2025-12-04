@@ -1,11 +1,11 @@
-package service
+package host
 
 import (
 	"fmt"
 	"k8s-platform-go/internal/common"
 	"k8s-platform-go/internal/dal/dto"
 	"k8s-platform-go/internal/dal/model"
-	"k8s-platform-go/internal/mapper"
+	"k8s-platform-go/internal/mapper/host"
 	"k8s-platform-go/internal/util"
 	"log"
 	"strconv"
@@ -17,7 +17,7 @@ import (
 )
 
 type HostService struct {
-	hostMapper *mapper.HostMapper
+	hostMapper *host.HostMapper
 	context    *gin.Context
 }
 
@@ -26,7 +26,7 @@ type item struct {
 	cmd  string
 }
 
-func NewHostService(hostMapper *mapper.HostMapper) *HostService {
+func NewHostService(hostMapper *host.HostMapper) *HostService {
 	return &HostService{
 		hostMapper: hostMapper,
 	}

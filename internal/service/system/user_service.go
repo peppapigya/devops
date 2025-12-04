@@ -1,4 +1,4 @@
-package service
+package system
 
 import (
 	"k8s-platform-go/internal/common"
@@ -6,7 +6,7 @@ import (
 	"k8s-platform-go/internal/dal/dto"
 	"k8s-platform-go/internal/dal/model"
 	"k8s-platform-go/internal/dal/redis"
-	"k8s-platform-go/internal/mapper"
+	"k8s-platform-go/internal/mapper/system"
 	"k8s-platform-go/internal/util"
 	"log"
 
@@ -16,12 +16,12 @@ import (
 // 用户相关业务
 
 type UserService struct {
-	userMapper  *mapper.UserMapper
+	userMapper  *system.UserMapper
 	context     *gin.Context
 	redisClient *redis.Client
 }
 
-func NewUserService(userMapper *mapper.UserMapper, redisClient *redis.Client) *UserService {
+func NewUserService(userMapper *system.UserMapper, redisClient *redis.Client) *UserService {
 	return &UserService{
 		userMapper:  userMapper,
 		redisClient: redisClient,

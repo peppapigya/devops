@@ -1,4 +1,4 @@
-package mapper
+package job
 
 import (
 	"k8s-platform-go/internal/dal/dto"

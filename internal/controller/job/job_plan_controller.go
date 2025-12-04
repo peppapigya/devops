@@ -3,7 +3,7 @@ package job
 import (
 	"k8s-platform-go/internal/common"
 	"k8s-platform-go/internal/dal/dto"
-	"k8s-platform-go/internal/service"
+	"k8s-platform-go/internal/service/job"
 	"k8s-platform-go/internal/util"
 	"log"
 
@@ -11,10 +11,10 @@ import (
 )
 
 type JobPlanController struct {
-	jobPlanService *service.JobPlanService
+	jobPlanService *job.JobPlanService
 }
 
-func NewJobPlanController(jobPlanService *service.JobPlanService) *JobPlanController {
+func NewJobPlanController(jobPlanService *job.JobPlanService) *JobPlanController {
 	return &JobPlanController{
 		jobPlanService: jobPlanService,
 	}
