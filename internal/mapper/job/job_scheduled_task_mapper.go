@@ -3,18 +3,21 @@ package job
 import (
 	"k8s-platform-go/internal/dal/dto"
 	"k8s-platform-go/internal/dal/model"
+	"k8s-platform-go/internal/dal/query"
 	"k8s-platform-go/internal/util"
 
 	"gorm.io/gorm"
 )
 
 type JobScheduledTaskMapper struct {
-	DB *gorm.DB
+	DB    *gorm.DB
+	query *query.Query
 }
 
 func NewJobScheduledTaskMapper(DB *gorm.DB) *JobScheduledTaskMapper {
 	return &JobScheduledTaskMapper{
-		DB: DB,
+		DB:    DB,
+		query: query.Use(DB),
 	}
 }
 
@@ -62,4 +65,11 @@ func (m *JobScheduledTaskMapper) GetJobScheduledTaskPage(request dto.JobSchedule
 		Total: total,
 		Data:  tasks,
 	}, nil
+}
+
+func (m *JobScheduledTaskMapper) UpdateJobScheduledTaskStatus(id int64, status uint32) (bool, error) {
+	jobScheduledTask := m.query.JobScheduledTask
+	info, err := jobScheduledTask.Where(jobScheduledTask.ID.Eq(uint32(id))).UpdateColumn(jobScheduledTask.Status, status)
+	return info.RowsAffected > 0, err
+
 }

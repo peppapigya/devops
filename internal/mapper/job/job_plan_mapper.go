@@ -3,18 +3,21 @@ package job
 import (
 	"k8s-platform-go/internal/dal/dto"
 	"k8s-platform-go/internal/dal/model"
+	"k8s-platform-go/internal/dal/query"
 	"k8s-platform-go/internal/util"
 
 	"gorm.io/gorm"
 )
 
 type JobPlanMapper struct {
-	DB *gorm.DB
+	DB    *gorm.DB
+	query *query.Query
 }
 
 func NewJobPlanMapper(DB *gorm.DB) *JobPlanMapper {
 	return &JobPlanMapper{
-		DB: DB,
+		DB:    DB,
+		query: query.Use(DB),
 	}
 }
 
@@ -71,4 +74,8 @@ func (m *JobPlanMapper) GetJobPlanPage(request dto.JobPlanPageRequest) (*util.Pa
 		Total: total,
 		Data:  plans,
 	}, nil
+}
+
+func (m *JobPlanMapper) SelectList() ([]*model.JobPlan, error) {
+	return m.query.JobPlan.Find()
 }

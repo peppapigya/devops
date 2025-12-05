@@ -102,3 +102,16 @@ func (ctrl *JobPlanController) GetJobPlanById(c *gin.Context) {
 	}
 	ctrl.jobPlanService.GetJobPlanById(c, id)
 }
+
+// @Tags 作业计划管理
+// @Summary 获取计划下拉列表
+// @Router /jobs/plan/list [get]
+func (ctrl *JobPlanController) GetJobPlanSelectList(c *gin.Context) {
+	list, err := ctrl.jobPlanService.GetJobPlanSelectList()
+	if err != nil {
+		common.BusinessFail(c, err.Error())
+		c.Abort()
+		return
+	}
+	common.Success(c, list)
+}

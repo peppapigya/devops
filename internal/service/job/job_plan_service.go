@@ -142,6 +142,11 @@ func (s *JobPlanService) GetJobPlanById(c *gin.Context, id int64) {
 	common.Success(c, res)
 }
 
+func (s *JobPlanService) GetJobPlanSelectList() ([]*model.JobPlan, error) {
+	res, err := s.jobPlanMapper.SelectList()
+	return res, err
+}
+
 // 构建计划脚本
 func buildJobPlanScript(jobPlanScripts []*model.JobPlanScript) []dto.JobPlanScriptResponse {
 	res := make([]dto.JobPlanScriptResponse, 0)

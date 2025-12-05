@@ -71,3 +71,15 @@ func (s *JobScheduledTaskService) GetJobScheduledTaskPage(c *gin.Context, req dt
 	}
 	common.Success(c, pageResult)
 }
+
+func (s *JobScheduledTaskService) GetJobScheduledTaskById(id int64) (*model.JobScheduledTask, error) {
+	return s.jobScheduledTaskMapper.GetJobScheduledTaskById(id)
+}
+
+func (s *JobScheduledTaskService) UpdateJobScheduledTaskStatus(jobScheduledTaskRequest *dto.JobScheduledTaskStatusRequest) (bool, error) {
+	task, err := s.jobScheduledTaskMapper.GetJobScheduledTaskById(jobScheduledTaskRequest.Id)
+	if err != nil || task == nil {
+		return false, common.TaskNotExist
+	}
+	return s.jobScheduledTaskMapper.UpdateJobScheduledTaskStatus(jobScheduledTaskRequest.Id, jobScheduledTaskRequest.Status)
+}
