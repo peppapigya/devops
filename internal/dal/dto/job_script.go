@@ -26,15 +26,15 @@ type DistributeJobScript struct {
 	// 主机id列表
 	HostIds []uint32
 	// 上传到远端路径
-	RemotePath string `form:"targetPath"`
+	RemotePath string `form:"remotePath"`
 	// 是否备份
 	Backup bool `form:"backup"`
 	// 是否覆盖
 	Overwrite bool `form:"overwrite"`
 	// 文件权限
-	Permission string `form:"filePermission"`
+	Permission string `form:"permission"`
 	// 传输使用的用户
-	User string
+	User string `form:"user"`
 }
 
 // DistributeResult 脚本或文件分发结果

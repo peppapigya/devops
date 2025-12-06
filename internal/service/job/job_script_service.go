@@ -346,8 +346,8 @@ func (s *JobScriptService) overwriteFile(sftpClient *sftp.Client, remotePath str
 		return err
 	}
 	// 如果文件不存在或者不需要覆盖，直接返回
-	if _, err := sftpClient.Stat(remotePath); err == nil || !overWrite {
-		return fmt.Errorf("文件已存在或者不需要覆盖：%s", err)
+	if _, err := sftpClient.Stat(remotePath); err == nil && !overWrite {
+		return fmt.Errorf("文件已存在请选择覆盖模式：%s", err)
 	}
 	return nil
 }
