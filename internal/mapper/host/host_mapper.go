@@ -1,4 +1,4 @@
-package mapper
+package host
 
 import (
 	"context"
@@ -69,4 +69,10 @@ func (hostMapper *HostMapper) SelectHostSelectList() ([]*model.Host, error) {
 func (hostMapper *HostMapper) SelectByIds(ids []uint32) ([]*model.Host, error) {
 	host := hostMapper.query.Host
 	return hostMapper.query.Host.Where(host.ID.In(ids...)).Find()
+}
+
+// SelectHostByIds 根据主机id列表查询主机信息
+func (hostMapper *HostMapper) SelectHostByIds(ids []uint32) ([]*model.Host, error) {
+	host := hostMapper.query.Host
+	return host.Where(host.ID.In(ids...)).Find()
 }

@@ -8,11 +8,16 @@ package wireinfo
 
 import (
 	"k8s-platform-go/internal/config/db"
+	"k8s-platform-go/internal/controller/host"
 	"k8s-platform-go/internal/controller/job"
 	"k8s-platform-go/internal/controller/system"
 	"k8s-platform-go/internal/dal/redis"
-	"k8s-platform-go/internal/mapper"
-	"k8s-platform-go/internal/service"
+	host2 "k8s-platform-go/internal/mapper/host"
+	job2 "k8s-platform-go/internal/mapper/job"
+	system2 "k8s-platform-go/internal/mapper/system"
+	host3 "k8s-platform-go/internal/service/host"
+	job3 "k8s-platform-go/internal/service/job"
+	system3 "k8s-platform-go/internal/service/system"
 	"k8s-platform-go/internal/strategy/script_executors"
 )
 
@@ -21,28 +26,28 @@ import (
 // 初始化用户控制器
 func InitializeUserController() *system.UserController {
 	gormDB := db.NewDB()
-	userMapper := mapper.NewUserMapper(gormDB)
+	userMapper := system2.NewUserMapper(gormDB)
 	client := db.InitRedis()
 	redisClient := redis.NewClient(client)
-	userService := service.NewUserService(userMapper, redisClient)
+	userService := system3.NewUserService(userMapper, redisClient)
 	userController := system.NewUserController(userService)
 	return userController
 }
 
 // 初始化主机控制器
-func InitializeHostController() *system.HostController {
+func InitializeHostController() *host.HostController {
 	gormDB := db.NewDB()
-	hostMapper := mapper.NewHostMapper(gormDB)
-	hostService := service.NewHostService(hostMapper)
-	hostController := system.NewHostController(hostService)
+	hostMapper := host2.NewHostMapper(gormDB)
+	hostService := host3.NewHostService(hostMapper)
+	hostController := host.NewHostController(hostService)
 	return hostController
 }
 
 // 初始化部门控制器
 func InitializeDeptController() *system.DeptController {
 	gormDB := db.NewDB()
-	deptMapper := mapper.NewDeptMapper(gormDB)
-	deptService := service.NewDeptService(deptMapper)
+	deptMapper := system2.NewDeptMapper(gormDB)
+	deptService := system3.NewDeptService(deptMapper)
 	deptController := system.NewDeptController(deptService)
 	return deptController
 }
@@ -50,8 +55,8 @@ func InitializeDeptController() *system.DeptController {
 // 初始化字典类型控制器
 func InitializeDictTypeController() *system.DictTypeController {
 	gormDB := db.NewDB()
-	dictTypeMapper := mapper.NewDictTypeMapper(gormDB)
-	dictTypeService := service.NewDictTypeService(dictTypeMapper)
+	dictTypeMapper := system2.NewDictTypeMapper(gormDB)
+	dictTypeService := system3.NewDictTypeService(dictTypeMapper)
 	dictTypeController := system.NewDictTypeController(dictTypeService)
 	return dictTypeController
 }
@@ -59,8 +64,8 @@ func InitializeDictTypeController() *system.DictTypeController {
 // 初始化菜单控制器
 func InitializeMenuController() *system.MenuController {
 	gormDB := db.NewDB()
-	menuMapper := mapper.NewMenuMapper(gormDB)
-	menuService := service.NewMenuService(menuMapper)
+	menuMapper := system2.NewMenuMapper(gormDB)
+	menuService := system3.NewMenuService(menuMapper)
 	menuController := system.NewMenuController(menuService)
 	return menuController
 }
@@ -68,8 +73,10 @@ func InitializeMenuController() *system.MenuController {
 // 初始化作业脚本控制器
 func InitializeJobScriptController() *job.JobScriptController {
 	gormDB := db.NewDB()
-	jobScriptMapper := mapper.NewJobScriptMapper(gormDB)
-	jobScriptService := service.NewJobScriptService(jobScriptMapper)
+	jobScriptMapper := job2.NewJobScriptMapper(gormDB)
+	hostMapper := host2.NewHostMapper(gormDB)
+	hostService := host3.NewHostService(hostMapper)
+	jobScriptService := job3.NewJobScriptService(jobScriptMapper, hostService)
 	jobScriptController := job.NewJobScriptController(jobScriptService)
 	return jobScriptController
 }
@@ -77,9 +84,9 @@ func InitializeJobScriptController() *job.JobScriptController {
 // 初始化作业计划控制器
 func InitializeJobPlanController() *job.JobPlanController {
 	gormDB := db.NewDB()
-	jobPlanMapper := mapper.NewJobPlanMapper(gormDB)
-	jobPlanScriptMapper := mapper.NewJobPlanScriptMapper(gormDB)
-	jobPlanService := service.NewJobPlanService(jobPlanMapper, jobPlanScriptMapper)
+	jobPlanMapper := job2.NewJobPlanMapper(gormDB)
+	jobPlanScriptMapper := job2.NewJobPlanScriptMapper(gormDB)
+	jobPlanService := job3.NewJobPlanService(jobPlanMapper, jobPlanScriptMapper)
 	jobPlanController := job.NewJobPlanController(jobPlanService)
 	return jobPlanController
 }
@@ -87,8 +94,8 @@ func InitializeJobPlanController() *job.JobPlanController {
 // 初始化定时任务控制器
 func InitializeJobScheduledTaskController() *job.JobScheduledTaskController {
 	gormDB := db.NewDB()
-	jobScheduledTaskMapper := mapper.NewJobScheduledTaskMapper(gormDB)
-	jobScheduledTaskService := service.NewJobScheduledTaskService(jobScheduledTaskMapper)
+	jobScheduledTaskMapper := job2.NewJobScheduledTaskMapper(gormDB)
+	jobScheduledTaskService := job3.NewJobScheduledTaskService(jobScheduledTaskMapper)
 	jobScheduledTaskController := job.NewJobScheduledTaskController(jobScheduledTaskService)
 	return jobScheduledTaskController
 }
@@ -96,8 +103,8 @@ func InitializeJobScheduledTaskController() *job.JobScheduledTaskController {
 // 初始化作业日志控制器
 func InitializeJobPlanLogController() *job.JobPlanLogController {
 	gormDB := db.NewDB()
-	jobPlanLogMapper := mapper.NewJobPlanLogMapper(gormDB)
-	jobPlanLogService := service.NewJobPlanLogService(jobPlanLogMapper)
+	jobPlanLogMapper := job2.NewJobPlanLogMapper(gormDB)
+	jobPlanLogService := job3.NewJobPlanLogService(jobPlanLogMapper)
 	jobPlanLogController := job.NewJobPlanLogController(jobPlanLogService)
 	return jobPlanLogController
 }
@@ -105,7 +112,7 @@ func InitializeJobPlanLogController() *job.JobPlanLogController {
 // 初始化shell脚本控制器
 func InitializeShellScriptExecutor() *script_executors.ShellExecutor {
 	gormDB := db.NewDB()
-	hostMapper := mapper.NewHostMapper(gormDB)
+	hostMapper := host2.NewHostMapper(gormDB)
 	shellExecutor := script_executors.NewShellExecutor(hostMapper)
 	return shellExecutor
 }

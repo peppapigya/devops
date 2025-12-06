@@ -1,20 +1,20 @@
-package service
+package system
 
 import (
 	"fmt"
 	"k8s-platform-go/internal/common"
 	"k8s-platform-go/internal/dal/dto"
 	"k8s-platform-go/internal/dal/model"
-	"k8s-platform-go/internal/mapper"
+	"k8s-platform-go/internal/mapper/system"
 	"k8s-platform-go/internal/util"
 	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
-type MenuService struct{ m *mapper.MenuMapper }
+type MenuService struct{ m *system.MenuMapper }
 
-func NewMenuService(m *mapper.MenuMapper) *MenuService { return &MenuService{m: m} }
+func NewMenuService(m *system.MenuMapper) *MenuService { return &MenuService{m: m} }
 
 type MenuRoute struct {
 	Name          string      `json:"name"`

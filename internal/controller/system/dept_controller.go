@@ -3,16 +3,16 @@ package system
 import (
 	"k8s-platform-go/internal/common"
 	"k8s-platform-go/internal/dal/dto"
-	"k8s-platform-go/internal/service"
+	"k8s-platform-go/internal/service/system"
 	"k8s-platform-go/internal/util"
 	"log"
 
 	"github.com/gin-gonic/gin"
 )
 
-type DeptController struct{ svc *service.DeptService }
+type DeptController struct{ svc *system.DeptService }
 
-func NewDeptController(s *service.DeptService) *DeptController { return &DeptController{svc: s} }
+func NewDeptController(s *system.DeptService) *DeptController { return &DeptController{svc: s} }
 
 // Page 获取部门分页列表
 // @Summary 获取部门分页列表

@@ -1,14 +1,15 @@
-package mapper
+package system
 
 import (
 	"context"
-	"gorm.io/gen"
-	"gorm.io/gorm"
 	"k8s-platform-go/internal/dal/dto"
 	"k8s-platform-go/internal/dal/model"
 	"k8s-platform-go/internal/dal/query"
 	"k8s-platform-go/internal/util"
 	"strconv"
+
+	"gorm.io/gen"
+	"gorm.io/gorm"
 )
 
 type DeptMapper struct {

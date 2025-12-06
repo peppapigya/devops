@@ -29,8 +29,9 @@ func newJobPlanScript(db *gorm.DB, opts ...gen.DOOption) jobPlanScript {
 	tableName := _jobPlanScript.jobPlanScriptDo.TableName()
 	_jobPlanScript.ALL = field.NewAsterisk(tableName)
 	_jobPlanScript.ID = field.NewUint32(tableName, "id")
-	_jobPlanScript.PlanID = field.NewInt32(tableName, "plan_id")
-	_jobPlanScript.ScriptID = field.NewInt32(tableName, "script_id")
+	_jobPlanScript.PlanID = field.NewUint32(tableName, "plan_id")
+	_jobPlanScript.ScriptID = field.NewUint32(tableName, "script_id")
+	_jobPlanScript.Name = field.NewString(tableName, "name")
 	_jobPlanScript.Sort = field.NewUint32(tableName, "sort")
 	_jobPlanScript.CreatedAt = field.NewTime(tableName, "created_at")
 	_jobPlanScript.UpdatedAt = field.NewTime(tableName, "updated_at")
@@ -46,8 +47,9 @@ type jobPlanScript struct {
 
 	ALL       field.Asterisk
 	ID        field.Uint32 // 主键id
-	PlanID    field.Int32  // 计划id
-	ScriptID  field.Int32  // 脚本id
+	PlanID    field.Uint32 // 计划id
+	ScriptID  field.Uint32 // 脚本id
+	Name      field.String // 脚本名字
 	Sort      field.Uint32 // 排序
 	CreatedAt field.Time   // 创建时间
 	UpdatedAt field.Time   // 更新时间
@@ -69,8 +71,9 @@ func (j jobPlanScript) As(alias string) *jobPlanScript {
 func (j *jobPlanScript) updateTableName(table string) *jobPlanScript {
 	j.ALL = field.NewAsterisk(table)
 	j.ID = field.NewUint32(table, "id")
-	j.PlanID = field.NewInt32(table, "plan_id")
-	j.ScriptID = field.NewInt32(table, "script_id")
+	j.PlanID = field.NewUint32(table, "plan_id")
+	j.ScriptID = field.NewUint32(table, "script_id")
+	j.Name = field.NewString(table, "name")
 	j.Sort = field.NewUint32(table, "sort")
 	j.CreatedAt = field.NewTime(table, "created_at")
 	j.UpdatedAt = field.NewTime(table, "updated_at")
@@ -91,10 +94,11 @@ func (j *jobPlanScript) GetFieldByName(fieldName string) (field.OrderExpr, bool)
 }
 
 func (j *jobPlanScript) fillFieldMap() {
-	j.fieldMap = make(map[string]field.Expr, 7)
+	j.fieldMap = make(map[string]field.Expr, 8)
 	j.fieldMap["id"] = j.ID
 	j.fieldMap["plan_id"] = j.PlanID
 	j.fieldMap["script_id"] = j.ScriptID
+	j.fieldMap["name"] = j.Name
 	j.fieldMap["sort"] = j.Sort
 	j.fieldMap["created_at"] = j.CreatedAt
 	j.fieldMap["updated_at"] = j.UpdatedAt

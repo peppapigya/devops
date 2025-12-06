@@ -28,7 +28,7 @@ func newJobPlan(db *gorm.DB, opts ...gen.DOOption) jobPlan {
 
 	tableName := _jobPlan.jobPlanDo.TableName()
 	_jobPlan.ALL = field.NewAsterisk(tableName)
-	_jobPlan.ID = field.NewInt32(tableName, "id")
+	_jobPlan.ID = field.NewUint32(tableName, "id")
 	_jobPlan.Name = field.NewString(tableName, "name")
 	_jobPlan.GlobalVars = field.NewString(tableName, "global_vars")
 	_jobPlan.HostIds = field.NewString(tableName, "host_ids")
@@ -48,7 +48,7 @@ type jobPlan struct {
 	jobPlanDo
 
 	ALL         field.Asterisk
-	ID          field.Int32  // 主键id
+	ID          field.Uint32 // 主键id
 	Name        field.String // 任务名称
 	GlobalVars  field.String // 全局变量
 	HostIds     field.String // 主机列表
@@ -73,7 +73,7 @@ func (j jobPlan) As(alias string) *jobPlan {
 
 func (j *jobPlan) updateTableName(table string) *jobPlan {
 	j.ALL = field.NewAsterisk(table)
-	j.ID = field.NewInt32(table, "id")
+	j.ID = field.NewUint32(table, "id")
 	j.Name = field.NewString(table, "name")
 	j.GlobalVars = field.NewString(table, "global_vars")
 	j.HostIds = field.NewString(table, "host_ids")

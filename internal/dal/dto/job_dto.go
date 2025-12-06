@@ -23,13 +23,13 @@ type JobScriptPageRequest struct {
 
 // JobPlanSaveRequest 保存计划请求
 type JobPlanSaveRequest struct {
-	ID          int64   `json:"id"`
-	Name        string  `json:"name" validate:"required"`
-	GlobalVars  string  `json:"globalVars"`
-	HostIds     string  `json:"hostIds"`
-	HostGroupId uint32  `json:"hostGroupId"`
-	Remark      string  `json:"remark"`
-	ScriptIds   []int64 `json:"scriptIds"` // 关联的脚本ID列表
+	ID          int64           `json:"id"`
+	Name        string          `json:"name" validate:"required"`
+	GlobalVars  string          `json:"globalVars"`
+	HostIds     []int64         `json:"hostIds"`
+	HostGroupId uint32          `json:"hostGroupId"`
+	Remark      string          `json:"remark"`
+	Scripts     []JobPlanScript `json:"scripts"` // 关联的脚本ID列表
 }
 
 // JobPlanPageRequest 计划分页请求

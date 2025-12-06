@@ -3,7 +3,7 @@ package system
 import (
 	"k8s-platform-go/internal/common"
 	"k8s-platform-go/internal/dal/dto"
-	"k8s-platform-go/internal/service"
+	"k8s-platform-go/internal/service/system"
 	"k8s-platform-go/internal/util"
 	"log"
 
@@ -11,10 +11,10 @@ import (
 )
 
 type UserController struct {
-	userService *service.UserService
+	userService *system.UserService
 }
 
-func NewUserController(userService *service.UserService) *UserController {
+func NewUserController(userService *system.UserService) *UserController {
 	return &UserController{
 		userService: userService,
 	}

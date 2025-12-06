@@ -3,14 +3,14 @@ package system
 import (
 	"k8s-platform-go/internal/common"
 	"k8s-platform-go/internal/dal/dto"
-	"k8s-platform-go/internal/service"
+	"k8s-platform-go/internal/service/system"
 
 	"github.com/gin-gonic/gin"
 )
 
-type MenuController struct{ s *service.MenuService }
+type MenuController struct{ s *system.MenuService }
 
-func NewMenuController(s *service.MenuService) *MenuController {
+func NewMenuController(s *system.MenuService) *MenuController {
 	return &MenuController{s: s}
 }
 

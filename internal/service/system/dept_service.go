@@ -1,20 +1,20 @@
-package service
+package system
 
 import (
 	"k8s-platform-go/internal/common"
 	"k8s-platform-go/internal/dal/dto"
 	"k8s-platform-go/internal/dal/model"
-	"k8s-platform-go/internal/mapper"
+	"k8s-platform-go/internal/mapper/system"
 	"log"
 
 	"github.com/gin-gonic/gin"
 )
 
 type DeptService struct {
-	mapper *mapper.DeptMapper
+	mapper *system.DeptMapper
 }
 
-func NewDeptService(m *mapper.DeptMapper) *DeptService { return &DeptService{mapper: m} }
+func NewDeptService(m *system.DeptMapper) *DeptService { return &DeptService{mapper: m} }
 
 func (s *DeptService) Page(c *gin.Context, req dto.DeptPageRequest) {
 	res, err := s.mapper.SelectPageByCondition(req)

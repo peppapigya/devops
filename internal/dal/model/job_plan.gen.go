@@ -14,7 +14,7 @@ const TableNameJobPlan = "job_plan"
 
 // JobPlan 执行计划
 type JobPlan struct {
-	ID          int32          `gorm:"column:id;type:int(11);primaryKey;comment:主键id" json:"id"`                                         // 主键id
+	ID          uint32         `gorm:"column:id;type:int(11) unsigned;primaryKey;autoIncrement:true;comment:主键id" json:"id"`             // 主键id
 	Name        string         `gorm:"column:name;type:varchar(50);not null;comment:任务名称" json:"name"`                                   // 任务名称
 	GlobalVars  string         `gorm:"column:global_vars;type:varchar(255);not null;comment:全局变量" json:"globalVars"`                     // 全局变量
 	HostIds     string         `gorm:"column:host_ids;type:varchar(255);not null;comment:主机列表" json:"hostIds"`                           // 主机列表

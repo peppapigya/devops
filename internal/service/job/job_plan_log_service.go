@@ -1,18 +1,18 @@
-package service
+package job
 
 import (
 	"k8s-platform-go/internal/common"
 	"k8s-platform-go/internal/dal/dto"
-	"k8s-platform-go/internal/mapper"
+	"k8s-platform-go/internal/mapper/job"
 
 	"github.com/gin-gonic/gin"
 )
 
 type JobPlanLogService struct {
-	jobPlanLogMapper *mapper.JobPlanLogMapper
+	jobPlanLogMapper *job.JobPlanLogMapper
 }
 
-func NewJobPlanLogService(jobPlanLogMapper *mapper.JobPlanLogMapper) *JobPlanLogService {
+func NewJobPlanLogService(jobPlanLogMapper *job.JobPlanLogMapper) *JobPlanLogService {
 	return &JobPlanLogService{
 		jobPlanLogMapper: jobPlanLogMapper,
 	}

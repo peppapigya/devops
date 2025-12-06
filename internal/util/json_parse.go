@@ -12,23 +12,41 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
 )
 
 // BindAndValidate 解析参数并将参数绑定到obj
 func BindAndValidate(c *gin.Context, obj interface{}) bool {
-	if err := c.ShouldBindJSON(obj); err != nil {
-		var errs validator.ValidationErrors
-		if ok := errors.As(err, &errs); ok {
-			log.Printf("参数校验失败: %v", errs)
-			common.Fail(c, common.NewErrorCode(400, errs[0].Translate(common.GetTranslator())))
-			c.Abort()
+	contentType := c.GetHeader("Content-Type")
+	if strings.Contains(contentType, "multipart/form-data") {
+		if err := c.Request.ParseMultipartForm(32 << 20); err != nil { // 32MB
+			log.Printf("解析multipart表单失败: %v", err)
+			common.Fail(c, common.NewErrorCode(400, "表单解析失败"))
 			return false
 		}
-		log.Printf("解析参数失败: %v", err)
-		common.Fail(c, common.ServerError)
-		return false
+
+		// 使用 ShouldBindWith 指定 FormData 绑定
+		if err := c.ShouldBindWith(obj, binding.Form); err != nil {
+			log.Printf("FormData参数绑定失败: %v", err)
+			common.Fail(c, common.ServerError)
+			return false
+		}
+	} else {
+		if err := c.ShouldBindJSON(obj); err != nil {
+			var errs validator.ValidationErrors
+			if ok := errors.As(err, &errs); ok {
+				log.Printf("参数校验失败: %v", errs)
+				common.Fail(c, common.NewErrorCode(400, errs[0].Translate(common.GetTranslator())))
+				c.Abort()
+				return false
+			}
+			log.Printf("解析参数失败: %v", err)
+			common.Fail(c, common.ServerError)
+			return false
+		}
 	}
+
 	return true
 }
 

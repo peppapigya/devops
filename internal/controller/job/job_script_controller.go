@@ -1,9 +1,10 @@
 package job
 
 import (
+	"encoding/json"
 	"k8s-platform-go/internal/common"
 	"k8s-platform-go/internal/dal/dto"
-	"k8s-platform-go/internal/service"
+	"k8s-platform-go/internal/service/job"
 	"k8s-platform-go/internal/util"
 	"log"
 
@@ -11,10 +12,10 @@ import (
 )
 
 type JobScriptController struct {
-	jobScriptService *service.JobScriptService
+	jobScriptService *job.JobScriptService
 }
 
-func NewJobScriptController(jobScriptService *service.JobScriptService) *JobScriptController {
+func NewJobScriptController(jobScriptService *job.JobScriptService) *JobScriptController {
 	return &JobScriptController{
 		jobScriptService: jobScriptService,
 	}
@@ -127,6 +128,47 @@ func (ctrl *JobScriptController) ExecuteJobScript(c *gin.Context) {
 		return
 	}
 	result, err := ctrl.jobScriptService.ExecuteJobScript(c, script)
+	if err != nil {
+		common.FailWithError(c, err)
+		return
+	}
+	common.Success(c, result)
+}
+
+// @Tags 作业脚本管理
+// @Summary 分发脚本或脚本文件
+// @Param request body dto.DistributeJobScript true "请求参数"
+// @Router /jobs/script/distribute [post]
+func (ctrl *JobScriptController) DistributeJobScript(c *gin.Context) {
+	var distribute dto.DistributeJobScript
+	if ok := util.BindAndValidate(c, &distribute); !ok {
+		log.Printf("参数解析失败或验证失败\n")
+		c.Abort()
+		return
+	}
+
+	// 获取上传文件
+	file, header, err := c.Request.FormFile("files")
+	if err == nil {
+		defer func() {
+			_ = file.Close()
+		}()
+		distribute.File = header
+	}
+
+	// 将主机解析为数组
+	var hostIds []uint32
+	if err := json.Unmarshal([]byte(distribute.HostIdsStr), &hostIds); err != nil {
+		log.Printf("主机ID解析失败：%s\n", err)
+		common.Fail(c, common.BadRequest)
+		c.Abort()
+		return
+	}
+	distribute.HostIds = hostIds
+
+	result, err := ctrl.jobScriptService.DistributeJobScript(distribute)
+	value := c.PostForm("filePermission")
+	distribute.Permission = value
 	if err != nil {
 		common.FailWithError(c, err)
 		return

@@ -42,10 +42,11 @@ var (
 	// 该菜单下存在子菜单，不能删除
 	MenuHasChildren = NewErrorCode(30005, "该菜单下存在子菜单，不能删除")
 
-	// =======================  job 相关 ========================
+	//  =======================  job 相关 ========================
 	// 获取脚本工厂失败
 	ScriptFactoryNotExist = NewErrorCode(40001, "获取脚本工厂失败")
 	ScriptNotExist        = NewErrorCode(40002, "脚本不存在")
+	TaskNotExist          = NewErrorCode(40003, "任务不存在")
 )
 
 // NewErrorCode 创建错误码，方便后续业务调用

@@ -1,18 +1,18 @@
-package service
+package system
 
 import (
 	"k8s-platform-go/internal/common"
 	"k8s-platform-go/internal/dal/dto"
 	"k8s-platform-go/internal/dal/model"
-	"k8s-platform-go/internal/mapper"
+	"k8s-platform-go/internal/mapper/system"
 	"log"
 
 	"github.com/gin-gonic/gin"
 )
 
-type DictTypeService struct{ m *mapper.DictTypeMapper }
+type DictTypeService struct{ m *system.DictTypeMapper }
 
-func NewDictTypeService(m *mapper.DictTypeMapper) *DictTypeService { return &DictTypeService{m: m} }
+func NewDictTypeService(m *system.DictTypeMapper) *DictTypeService { return &DictTypeService{m: m} }
 
 func (s *DictTypeService) Page(c *gin.Context, req dto.DictTypePageRequest) {
 	res, err := s.m.SelectPage(req)

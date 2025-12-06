@@ -1,19 +1,19 @@
-package service
+package job
 
 import (
 	"k8s-platform-go/internal/common"
 	"k8s-platform-go/internal/dal/dto"
 	"k8s-platform-go/internal/dal/model"
-	"k8s-platform-go/internal/mapper"
+	"k8s-platform-go/internal/mapper/job"
 
 	"github.com/gin-gonic/gin"
 )
 
 type JobScheduledTaskService struct {
-	jobScheduledTaskMapper *mapper.JobScheduledTaskMapper
+	jobScheduledTaskMapper *job.JobScheduledTaskMapper
 }
 
-func NewJobScheduledTaskService(jobScheduledTaskMapper *mapper.JobScheduledTaskMapper) *JobScheduledTaskService {
+func NewJobScheduledTaskService(jobScheduledTaskMapper *job.JobScheduledTaskMapper) *JobScheduledTaskService {
 	return &JobScheduledTaskService{
 		jobScheduledTaskMapper: jobScheduledTaskMapper,
 	}
@@ -70,4 +70,16 @@ func (s *JobScheduledTaskService) GetJobScheduledTaskPage(c *gin.Context, req dt
 		return
 	}
 	common.Success(c, pageResult)
+}
+
+func (s *JobScheduledTaskService) GetJobScheduledTaskById(id int64) (*model.JobScheduledTask, error) {
+	return s.jobScheduledTaskMapper.GetJobScheduledTaskById(id)
+}
+
+func (s *JobScheduledTaskService) UpdateJobScheduledTaskStatus(jobScheduledTaskRequest *dto.JobScheduledTaskStatusRequest) (bool, error) {
+	task, err := s.jobScheduledTaskMapper.GetJobScheduledTaskById(jobScheduledTaskRequest.Id)
+	if err != nil || task == nil {
+		return false, common.TaskNotExist
+	}
+	return s.jobScheduledTaskMapper.UpdateJobScheduledTaskStatus(jobScheduledTaskRequest.Id, jobScheduledTaskRequest.Status)
 }

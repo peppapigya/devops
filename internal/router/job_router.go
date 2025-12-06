@@ -34,6 +34,7 @@ func InitJobRouter(rg *gin.RouterGroup) {
 			planGroup.DELETE("/:id", jobPlanController.DeleteJobPlan)
 			planGroup.POST("/page", jobPlanController.GetJobPlanPage)
 			planGroup.GET("/:id", jobPlanController.GetJobPlanById)
+			planGroup.GET("/list", jobPlanController.GetJobPlanSelectList)
 		}
 
 		// Schedule routes
@@ -41,14 +42,20 @@ func InitJobRouter(rg *gin.RouterGroup) {
 		{
 			scheduleGroup.POST("/", jobScheduledTaskController.CreateJobScheduledTask)
 			scheduleGroup.PUT("/", jobScheduledTaskController.UpdateJobScheduledTask)
+			scheduleGroup.GET("/:id", jobScheduledTaskController.GetJobScheduledTaskById)
 			scheduleGroup.DELETE("/:id", jobScheduledTaskController.DeleteJobScheduledTask)
 			scheduleGroup.POST("/page", jobScheduledTaskController.GetJobScheduledTaskPage)
+			scheduleGroup.PUT("/status", jobScheduledTaskController.UpdateJobScheduledTaskStatus)
 		}
 
 		// Log routes
 		logGroup := jobGroup.Group("/log")
 		{
 			logGroup.POST("/page", jobPlanLogController.GetJobPlanLogPage)
+		}
+		distribute := jobGroup.Group("/distribute")
+		{
+			distribute.POST("/upload", jobScriptController.DistributeJobScript)
 		}
 	}
 }

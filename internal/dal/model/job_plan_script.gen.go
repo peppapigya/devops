@@ -15,8 +15,9 @@ const TableNameJobPlanScript = "job_plan_script"
 // JobPlanScript mapped from table <job_plan_script>
 type JobPlanScript struct {
 	ID        uint32         `gorm:"column:id;type:int(10) unsigned;primaryKey;autoIncrement:true;comment:主键id" json:"id"`             // 主键id
-	PlanID    int32          `gorm:"column:plan_id;type:int(11);not null;comment:计划id" json:"planId"`                                  // 计划id
-	ScriptID  int32          `gorm:"column:script_id;type:int(11);not null;comment:脚本id" json:"scriptId"`                              // 脚本id
+	PlanID    uint32         `gorm:"column:plan_id;type:int(11) unsigned;not null;comment:计划id" json:"planId"`                         // 计划id
+	ScriptID  uint32         `gorm:"column:script_id;type:int(11) unsigned;not null;comment:脚本id" json:"scriptId"`                     // 脚本id
+	Name      string         `gorm:"column:name;type:varchar(50);not null;comment:脚本名字" json:"name"`                                   // 脚本名字
 	Sort      uint32         `gorm:"column:sort;type:tinyint(3) unsigned;not null;comment:排序" json:"sort"`                             // 排序
 	CreatedAt time.Time      `gorm:"column:created_at;type:datetime;not null;default:CURRENT_TIMESTAMP;comment:创建时间" json:"createdAt"` // 创建时间
 	UpdatedAt time.Time      `gorm:"column:updated_at;type:datetime;not null;default:CURRENT_TIMESTAMP;comment:更新时间" json:"updatedAt"` // 更新时间
