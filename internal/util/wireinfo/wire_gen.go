@@ -8,14 +8,14 @@ package wireinfo
 
 import (
 	"k8s-platform-go/internal/config/db"
-	host3 "k8s-platform-go/internal/controller/host"
+	"k8s-platform-go/internal/controller/host"
 	"k8s-platform-go/internal/controller/job"
 	"k8s-platform-go/internal/controller/system"
 	"k8s-platform-go/internal/dal/redis"
 	host2 "k8s-platform-go/internal/mapper/host"
 	job2 "k8s-platform-go/internal/mapper/job"
 	system2 "k8s-platform-go/internal/mapper/system"
-	"k8s-platform-go/internal/service/host"
+	host3 "k8s-platform-go/internal/service/host"
 	job3 "k8s-platform-go/internal/service/job"
 	system3 "k8s-platform-go/internal/service/system"
 	"k8s-platform-go/internal/strategy/script_executors"
@@ -35,11 +35,11 @@ func InitializeUserController() *system.UserController {
 }
 
 // 初始化主机控制器
-func InitializeHostController() *host3.HostController {
+func InitializeHostController() *host.HostController {
 	gormDB := db.NewDB()
 	hostMapper := host2.NewHostMapper(gormDB)
-	hostService := host.NewHostService(hostMapper)
-	hostController := host3.NewHostController(hostService)
+	hostService := host3.NewHostService(hostMapper)
+	hostController := host.NewHostController(hostService)
 	return hostController
 }
 
@@ -74,7 +74,9 @@ func InitializeMenuController() *system.MenuController {
 func InitializeJobScriptController() *job.JobScriptController {
 	gormDB := db.NewDB()
 	jobScriptMapper := job2.NewJobScriptMapper(gormDB)
-	jobScriptService := job3.NewJobScriptService(jobScriptMapper)
+	hostMapper := host2.NewHostMapper(gormDB)
+	hostService := host3.NewHostService(hostMapper)
+	jobScriptService := job3.NewJobScriptService(jobScriptMapper, hostService)
 	jobScriptController := job.NewJobScriptController(jobScriptService)
 	return jobScriptController
 }

@@ -18,6 +18,7 @@ import (
 )
 
 type HostInfo struct {
+	ID       int
 	Address  string
 	Port     int
 	Username string
@@ -71,13 +72,13 @@ func (host *HostInfo) TestSSHConnection() (bool, error) {
 		log.Printf("连接失败: %v", err)
 		return false, err
 	}
-	defer client.Close()
+	defer func() { _ = client.Close() }()
 	// 执行简单的命令
 	session, err := client.NewSession()
 	if err != nil {
 		return false, err
 	}
-	defer session.Close()
+	defer func() { _ = session.Close() }()
 
 	output, err := session.Output("whoami")
 	if err != nil {
@@ -103,7 +104,7 @@ func (host *HostInfo) Execute(command string, isSave bool) (*ExecutorResult, err
 			Duration: formatDuration(time.Since(startTime)),
 		}, err
 	}
-	defer connection.Close()
+	defer func() { _ = connection.Close() }()
 
 	// 2. 建立session链接
 	session, err := connection.NewSession()
@@ -118,7 +119,7 @@ func (host *HostInfo) Execute(command string, isSave bool) (*ExecutorResult, err
 			Duration: formatDuration(time.Since(startTime)),
 		}, err
 	}
-	defer session.Close()
+	defer func() { _ = session.Close() }()
 
 	// 3. 执行命令
 	var stdout, stderr bytes.Buffer
@@ -249,7 +250,7 @@ func (host *HostInfo) ExecuteStream(ctx context.Context, command string, onEvent
 		res.Duration = formatDuration(time.Since(start))
 		return res
 	}
-	defer conn.Close()
+	defer func() { _ = conn.Close() }()
 
 	sess, err := conn.NewSession()
 	if err != nil {
@@ -258,7 +259,7 @@ func (host *HostInfo) ExecuteStream(ctx context.Context, command string, onEvent
 		res.Duration = formatDuration(time.Since(start))
 		return res
 	}
-	defer sess.Close()
+	defer func() { _ = sess.Close() }()
 
 	stdoutPipe, err := sess.StdoutPipe()
 	if err != nil {

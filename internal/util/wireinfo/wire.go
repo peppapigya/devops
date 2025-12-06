@@ -52,7 +52,7 @@ func InitializeMenuController() *system.MenuController {
 
 // 初始化作业脚本控制器
 func InitializeJobScriptController() *job.JobScriptController {
-	wire.Build(db.NewDB, job2.NewJobScriptMapper, job3.NewJobScriptService, job.NewJobScriptController)
+	wire.Build(db.NewDB, host2.NewHostMapper, host.NewHostService, job2.NewJobScriptMapper, job3.NewJobScriptService, job.NewJobScriptController)
 	return &job.JobScriptController{}
 }
 

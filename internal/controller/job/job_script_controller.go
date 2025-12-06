@@ -1,6 +1,7 @@
 package job
 
 import (
+	"encoding/json"
 	"k8s-platform-go/internal/common"
 	"k8s-platform-go/internal/dal/dto"
 	"k8s-platform-go/internal/service/job"
@@ -145,15 +146,29 @@ func (ctrl *JobScriptController) DistributeJobScript(c *gin.Context) {
 		c.Abort()
 		return
 	}
+
 	// 获取上传文件
-	file, header, err := c.Request.FormFile("file")
+	file, header, err := c.Request.FormFile("files")
 	if err == nil {
 		defer func() {
 			_ = file.Close()
 		}()
 		distribute.File = header
 	}
-	result, err := ctrl.jobScriptService.DistributeJobScript(c, distribute)
+
+	// 将主机解析为数组
+	var hostIds []uint32
+	if err := json.Unmarshal([]byte(distribute.HostIdsStr), &hostIds); err != nil {
+		log.Printf("主机ID解析失败：%s\n", err)
+		common.Fail(c, common.BadRequest)
+		c.Abort()
+		return
+	}
+	distribute.HostIds = hostIds
+
+	result, err := ctrl.jobScriptService.DistributeJobScript(distribute)
+	value := c.PostForm("filePermission")
+	distribute.Permission = value
 	if err != nil {
 		common.FailWithError(c, err)
 		return

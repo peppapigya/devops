@@ -250,3 +250,22 @@ func ExecuteCommand(client *ssh.Client, commands []item) (map[string]string, err
 	wg.Wait()
 	return result, nil
 }
+
+func (hostService *HostService) GetHostByIds(ids []uint32) ([]*util.HostInfo, error) {
+	hosts, err := hostService.hostMapper.SelectHostByIds(ids)
+	if err != nil {
+		return nil, err
+	}
+	list, err := common.ConvertList(hosts, func(host *model.Host) (*util.HostInfo, error) {
+		return &util.HostInfo{
+			ID:       int(host.ID),
+			Address:  host.Address,
+			Port:     int(host.HostPort),
+			Username: host.Username,
+			Password: *host.HostPassword,
+			Timeout:  20 * time.Second,
+		}, nil
+	})
+	return list, err
+
+}

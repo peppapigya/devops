@@ -19,26 +19,28 @@ type ExecutorScript struct {
 // DistributeJobScript 分发脚本或本地文件请求类
 type DistributeJobScript struct {
 	// 脚本ID,如果为空的话则代表是传输的是文件流，不为空则是脚本内容
-	Id int `json:"id" validate:"gt=0"`
+	Id int64 `form:"id"`
 	// 文件
-	File *multipart.FileHeader `json:"-"`
+	File       *multipart.FileHeader `form:"-"`
+	HostIdsStr string                `form:"targetHosts" validate:"required"`
 	// 主机id列表
-	HostIds []uint32 `json:"hostIds" validate:"required,mi=1"`
+	HostIds []uint32
 	// 上传到远端路径
-	RemotePath string `json:"remotePath" validate:"required,path"`
+	RemotePath string `form:"targetPath"`
 	// 是否备份
-	Backup bool `json:"backup"`
+	Backup bool `form:"backup"`
 	// 是否覆盖
-	Overwrite bool `json:"overwrite"`
+	Overwrite bool `form:"overwrite"`
 	// 文件权限
-	Permission string `json:"permission"`
+	Permission string `form:"filePermission"`
 	// 传输使用的用户
-	User string `json:"user"`
+	User string
 }
 
 // DistributeResult 脚本或文件分发结果
 type DistributeResult struct {
-	HostID   uint32 `json:"host_id"`
+	HostID   uint32 `json:"hostId"`
+	Address  string `json:"address"`
 	TaskName string `json:"taskName"`
 	Success  bool   `json:"success"`
 	Message  string `json:"message"`

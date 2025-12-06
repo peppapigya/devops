@@ -53,5 +53,9 @@ func InitJobRouter(rg *gin.RouterGroup) {
 		{
 			logGroup.POST("/page", jobPlanLogController.GetJobPlanLogPage)
 		}
+		distribute := jobGroup.Group("/distribute")
+		{
+			distribute.POST("/upload", jobScriptController.DistributeJobScript)
+		}
 	}
 }
