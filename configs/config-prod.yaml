@@ -1,7 +1,9 @@
 server:
   port: "8081"
   debug: true
-
+  trusted-proxies:
+    - 127.0.0.1
+    - ::1
 database:
   dsn: "root:peppa-pig@tcp(39.103.56.192:8002)/k8s?charset=utf8mb4&parseTime=True&loc=Local"
 
@@ -10,6 +12,13 @@ redis:
   port: 8001
   password:
   db: 0
+# 日志相关配置
+log:
+  enable: true
+  # 是否输出到控制台，建议开发才打开，线上环境关闭即可
+  stdout: true
+  level: debug
+  path: ./logs/app.log
 
 jwt:
   secret: "n02y2Zqf4eL0hZ4xjQH9w1zDk1w5FqMnc9R+N8T1v2E="
