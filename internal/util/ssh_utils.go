@@ -27,13 +27,14 @@ type HostInfo struct {
 }
 
 type ExecutorResult struct {
+	HostId   int
 	Success  bool
 	Output   string
 	Error    error
 	Host     string
 	Command  string
 	ExitCode int
-	Duration string
+	Duration int64
 }
 
 // BatchConfig 批量执行配置
@@ -101,7 +102,7 @@ func (host *HostInfo) Execute(command string, isSave bool) (*ExecutorResult, err
 			Host:     host.Address,
 			Command:  command,
 			ExitCode: 1,
-			Duration: formatDuration(time.Since(startTime)),
+			Duration: time.Since(startTime).Milliseconds(),
 		}, err
 	}
 	defer func() { _ = connection.Close() }()
@@ -116,7 +117,7 @@ func (host *HostInfo) Execute(command string, isSave bool) (*ExecutorResult, err
 			Host:     host.Address,
 			Command:  command,
 			ExitCode: 1,
-			Duration: formatDuration(time.Since(startTime)),
+			Duration: time.Since(startTime).Milliseconds(),
 		}, err
 	}
 	defer func() { _ = session.Close() }()
@@ -135,12 +136,13 @@ func (host *HostInfo) Execute(command string, isSave bool) (*ExecutorResult, err
 
 	result := &ExecutorResult{
 		Success:  err == nil,
+		HostId:   host.ID,
 		Output:   fmt.Sprintf("正在执行命令: %s\n执行成功：%s", command, stdout.String()),
 		Error:    err,
 		Host:     host.Address,
 		Command:  command,
 		ExitCode: exitCode,
-		Duration: formatDuration(time.Since(startTime)),
+		Duration: time.Since(startTime).Milliseconds(),
 	}
 	if err != nil {
 		var exitErr *ssh.ExitError
@@ -158,7 +160,7 @@ func (host *HostInfo) ExecuteCommands(commands []string) ([]*ExecutorResult, err
 	var results []*ExecutorResult
 	for _, command := range commands {
 		result, err := host.Execute(command, true)
-		if err != nil {
+		if err != nil || result.Success == false || result.ExitCode != 0 {
 			results = append(results, result)
 			break
 		}
@@ -239,7 +241,7 @@ func (host *HostInfo) ExecuteStream(ctx context.Context, command string, onEvent
 		Host:     host.Address,
 		Command:  command,
 		ExitCode: 1,
-		Duration: "0s",
+		Duration: 0,
 	}
 
 	start := time.Now()
@@ -247,7 +249,7 @@ func (host *HostInfo) ExecuteStream(ctx context.Context, command string, onEvent
 	if err != nil {
 		res.Output = fmt.Sprintf("连接失败: %v", err)
 		res.Error = err
-		res.Duration = formatDuration(time.Since(start))
+		res.Duration = time.Since(start).Milliseconds()
 		return res
 	}
 	defer func() { _ = conn.Close() }()
@@ -256,7 +258,7 @@ func (host *HostInfo) ExecuteStream(ctx context.Context, command string, onEvent
 	if err != nil {
 		res.Output = fmt.Sprintf("建立会话失败: %v", err)
 		res.Error = err
-		res.Duration = formatDuration(time.Since(start))
+		res.Duration = time.Since(start).Milliseconds()
 		return res
 	}
 	defer func() { _ = sess.Close() }()
@@ -265,14 +267,14 @@ func (host *HostInfo) ExecuteStream(ctx context.Context, command string, onEvent
 	if err != nil {
 		res.Output = fmt.Sprintf("获取 stdout 管道失败: %v", err)
 		res.Error = err
-		res.Duration = formatDuration(time.Since(start))
+		res.Duration = time.Since(start).Milliseconds()
 		return res
 	}
 	stderrPipe, err := sess.StderrPipe()
 	if err != nil {
 		res.Output = fmt.Sprintf("获取 stderr 管道失败: %v", err)
 		res.Error = err
-		res.Duration = formatDuration(time.Since(start))
+		res.Duration = time.Since(start).Milliseconds()
 		return res
 	}
 
@@ -313,7 +315,7 @@ func (host *HostInfo) ExecuteStream(ctx context.Context, command string, onEvent
 	if err := sess.Start(command); err != nil {
 		res.Output = fmt.Sprintf("命令启动失败: %v", err)
 		res.Error = err
-		res.Duration = formatDuration(time.Since(start))
+		res.Duration = time.Since(start).Milliseconds()
 		return res
 	}
 
@@ -341,14 +343,14 @@ func (host *HostInfo) ExecuteStream(ctx context.Context, command string, onEvent
 		_ = sess.Signal(ssh.SIGKILL)
 		res.Output = fmt.Sprintf("命令被取消或超时: %v", ctx.Err())
 		res.Error = ctx.Err()
-		res.Duration = formatDuration(time.Since(start))
+		res.Duration = time.Since(start).Milliseconds()
 		// 等待读取 goroutine 结束
 		wg.Wait()
 		return res
 	case err := <-done:
 		// 命令正常/异常结束
 		wg.Wait()
-		res.Duration = formatDuration(time.Since(start))
+		res.Duration = time.Since(start).Milliseconds()
 		res.Output = fmt.Sprintf("stdout:%sstderr:%s", outBuf.String(), errBuf.String())
 		if err == nil {
 			res.Success = true

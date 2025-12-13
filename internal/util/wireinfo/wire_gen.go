@@ -73,10 +73,12 @@ func InitializeMenuController() *system.MenuController {
 // 初始化作业脚本控制器
 func InitializeJobScriptController() *job.JobScriptController {
 	gormDB := db.NewDB()
+	jobPlanLogMapper := job2.NewJobPlanLogMapper(gormDB)
+	jobPlanLogService := job3.NewJobPlanLogService(jobPlanLogMapper)
 	jobScriptMapper := job2.NewJobScriptMapper(gormDB)
 	hostMapper := host2.NewHostMapper(gormDB)
 	hostService := host3.NewHostService(hostMapper)
-	jobScriptService := job3.NewJobScriptService(jobScriptMapper, hostService)
+	jobScriptService := job3.NewJobScriptService(jobPlanLogService, jobScriptMapper, hostService)
 	jobScriptController := job.NewJobScriptController(jobScriptService)
 	return jobScriptController
 }

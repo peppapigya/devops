@@ -11,6 +11,7 @@ import (
 	"k8s-platform-go/internal/service/host"
 	"k8s-platform-go/internal/strategy"
 	"k8s-platform-go/internal/util"
+	"k8s-platform-go/pkg/consts"
 	"os"
 	"path"
 	"strconv"
@@ -23,14 +24,16 @@ import (
 )
 
 type JobScriptService struct {
-	jobScriptMapper *job.JobScriptMapper
-	hostService     *host.HostService
+	jobScriptMapper   *job.JobScriptMapper
+	jobPlanLogService *JobPlanLogService
+	hostService       *host.HostService
 }
 
-func NewJobScriptService(jobScriptMapper *job.JobScriptMapper, hostService *host.HostService) *JobScriptService {
+func NewJobScriptService(jobPlanLogService *JobPlanLogService, jobScriptMapper *job.JobScriptMapper, hostService *host.HostService) *JobScriptService {
 	return &JobScriptService{
-		jobScriptMapper: jobScriptMapper,
-		hostService:     hostService,
+		jobScriptMapper:   jobScriptMapper,
+		jobPlanLogService: jobPlanLogService,
+		hostService:       hostService,
 	}
 }
 
@@ -141,7 +144,40 @@ func (s *JobScriptService) ExecuteJobScript(c *gin.Context, script dto.ExecutorS
 		return nil, err
 	}
 	fmt.Printf("%v\n", execute)
+	// 添加执行日志
+	if err := s.insertJobLogs(execute, consts.ScriptExecuteTypeSingle, consts.JobTypeManual); err != nil {
+		return nil, err
+	}
 	return execute, nil
+}
+
+// 添加执行日志
+func (s *JobScriptService) insertJobLogs(executeResult map[string][]*util.ExecutorResult, method string, typeName string) error {
+	jobPlanLogs := make([]*model.JobPlanLog, 0)
+	for _, results := range executeResult {
+		var builder strings.Builder
+		var totalTime int64
+		status := true
+		hostId := results[0].HostId
+		for _, res := range results {
+			builder.WriteString(res.Output)
+			builder.WriteString("\n")
+			status = status && res.Success
+			totalTime += res.Duration
+		}
+		output := builder.String()
+		jobPlanLog := &model.JobPlanLog{
+			HostID:     uint32(hostId),
+			Method:     method,
+			Type:       typeName,
+			Status:     status,
+			TotalTime:  strconv.FormatInt(totalTime, 10),
+			ReturnCode: int32(results[len(results)-1].ExitCode),
+			Output:     &output,
+		}
+		jobPlanLogs = append(jobPlanLogs, jobPlanLog)
+	}
+	return s.jobPlanLogService.InsertJobPlanLogBatch(jobPlanLogs)
 }
 
 // 从数据库获取脚本信息并填充到请求参数中

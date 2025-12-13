@@ -3,6 +3,7 @@ package job
 import (
 	"k8s-platform-go/internal/common"
 	"k8s-platform-go/internal/dal/dto"
+	"k8s-platform-go/internal/dal/model"
 	"k8s-platform-go/internal/mapper/job"
 
 	"github.com/gin-gonic/gin"
@@ -25,4 +26,9 @@ func (s *JobPlanLogService) GetJobPlanLogPage(c *gin.Context, req dto.JobPlanLog
 		return
 	}
 	common.Success(c, pageResult)
+}
+
+func (s *JobPlanLogService) InsertJobPlanLogBatch(jobPlanLogs []*model.JobPlanLog) error {
+	err := s.jobPlanLogMapper.InsertJobPlanLogBatch(jobPlanLogs)
+	return err
 }

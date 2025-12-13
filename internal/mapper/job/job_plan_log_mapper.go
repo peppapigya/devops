@@ -3,18 +3,21 @@ package job
 import (
 	"k8s-platform-go/internal/dal/dto"
 	"k8s-platform-go/internal/dal/model"
+	"k8s-platform-go/internal/dal/query"
 	"k8s-platform-go/internal/util"
 
 	"gorm.io/gorm"
 )
 
 type JobPlanLogMapper struct {
-	DB *gorm.DB
+	DB    *gorm.DB
+	query *query.Query
 }
 
 func NewJobPlanLogMapper(DB *gorm.DB) *JobPlanLogMapper {
 	return &JobPlanLogMapper{
-		DB: DB,
+		DB:    DB,
+		query: query.Use(DB),
 	}
 }
 
@@ -44,4 +47,9 @@ func (m *JobPlanLogMapper) GetJobPlanLogPage(request dto.JobPlanLogPageRequest) 
 		Total: total,
 		Data:  logs,
 	}, nil
+}
+
+// InsertJobPlanLogBatch 批量插入执行日志
+func (m *JobPlanLogMapper) InsertJobPlanLogBatch(logs []*model.JobPlanLog) error {
+	return m.query.JobPlanLog.CreateInBatches(logs, len(logs))
 }

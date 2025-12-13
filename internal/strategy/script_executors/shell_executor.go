@@ -58,12 +58,13 @@ func (s ShellExecutor) Execute(c *gin.Context, script *dto.ExecutorScript) (map[
 	}
 	// 2. 进行ssh连接到对应的主机
 	hostInfos := make([]*util.HostInfo, 0, len(hosts))
-	for _, host := range hosts {
+	for _, hostDO := range hosts {
 		hostInfo := &util.HostInfo{
-			Address:  host.Address,
-			Port:     int(host.HostPort),
-			Username: host.Username,
-			Password: *host.HostPassword,
+			ID:       int(hostDO.ID),
+			Address:  hostDO.Address,
+			Port:     int(hostDO.HostPort),
+			Username: hostDO.Username,
+			Password: *hostDO.HostPassword,
 			Timeout:  time.Duration(script.TimeOut) * time.Second,
 		}
 		hostInfos = append(hostInfos, hostInfo)
